@@ -4,10 +4,14 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Enums\StickerAreaType;
+use App\Enums\GoalType;
+use App\Enums\OrderStatus;
 
 class Advertisement extends Model
 {
-    use SoftDeletes;
+    use HasFactory, SoftDeletes;
 
     protected $fillable = [
         'customer_id',
@@ -52,5 +56,32 @@ class Advertisement extends Model
     public function location()
     {
         return $this->belongsTo(MasterCity::class, 'target_location_id');
+    }
+
+    public static function calculatePrice($stickerAreaType, $targetPartner, $targetDistance)
+    {
+        $price = StickerAreaType::from($stickerAreaType)->price();
+        $cost = StickerAreaType::from($stickerAreaType)->cost();
+
+        $total = ($price * $targetDistance) + ($targetPartner * $cost);
+        return $total;
+    }
+
+    public function getGoalTypeLabelAttribute()
+    {
+        return GoalType::tryFrom($this->goal_type)?->label() ?? $this->goal_type;
+    }
+
+    public function getStickerAreaTypeLabelAttribute()
+    {
+        return StickerAreaType::tryFrom($this->sticker_area_type)?->label() ?? $this->sticker_area_type;
+    }
+
+    public function getAllowCancelAttribute()
+    {
+        if (in_array($this->status, [OrderStatus::DRAFT->value, OrderStatus::ON_REVIEW->value])) {
+            return true;
+        }
+        return false;
     }
 }
