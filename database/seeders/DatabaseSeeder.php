@@ -26,6 +26,8 @@ class DatabaseSeeder extends Seeder
             CustomerCategorySeeder::class,
             CustomerTypeSeeder::class,
             MasterLocationSeeder::class,
+            VehicleBrandSeeder::class,
+            MasterBanksSeeder::class,
         ]);
     }
 }
