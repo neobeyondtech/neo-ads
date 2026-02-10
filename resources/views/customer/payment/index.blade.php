@@ -15,7 +15,7 @@
 
             {{-- Tabs --}}
             <div class="flex gap-2">
-                <a href="{{ route('pembayaran.index') }}"
+                <a href="{{ route('my-payment.index') }}"
                 class="px-4 py-2 rounded-full text-sm font-medium
                 {{ request('tab') != 'berjalan'
                         ? 'bg-blue-900 text-white'
@@ -23,7 +23,7 @@
                     Semua Pembayaran
                 </a>
 
-                <a href="{{ route('pembayaran.index', ['tab' => 'berjalan']) }}"
+                <a href="{{ route('my-payment.index', ['tab' => 'berjalan']) }}"
                 class="px-4 py-2 rounded-full text-sm font-medium
                 {{ request('tab') == 'berjalan'
                         ? 'bg-blue-900 text-white'

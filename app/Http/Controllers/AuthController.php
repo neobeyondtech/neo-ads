@@ -20,7 +20,7 @@ class AuthController extends Controller
     public function showLogin()
     {
         if (Auth::check()) {
-            return redirect('/customer-profile');
+            return redirect('/my-profile');
         }
 
         return view('login');
@@ -58,7 +58,8 @@ class AuthController extends Controller
             'g-recaptcha-response' => 'required'
         ]);
 
-      $response = Http::asForm()->post(
+      //$response = Http::asForm()->post(
+        $response = Http::asForm()->withoutVerifying()->post(
             'https://www.google.com/recaptcha/api/siteverify',
             [
                 'secret' => env('RECAPTCHA_SECRET_KEY'),
@@ -89,7 +90,7 @@ class AuthController extends Controller
 
             if(Auth::user()->role == Role::CUSTOMER){
                 ActivityLog::logAuth('login', 'Customer logged in successfully');
-                return redirect()->intended('/customer-profile');
+                return redirect()->intended('/my-profile');
             }else{
                 ActivityLog::logAuth('login', 'Admin logged in successfully');
                 return redirect()->intended('/dashboard');
@@ -171,7 +172,7 @@ class AuthController extends Controller
 
         ActivityLog::logAuth('login', 'Logged in with Google account');
         if(Auth::user()->role == Role::CUSTOMER){
-            return redirect('/customer-profile');
+            return redirect('/my-profile');
         }else{  
             return redirect('/dashboard');
         }

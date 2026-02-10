@@ -26,9 +26,24 @@ class Customer extends Model
         return $this->belongsTo(CustomerType::class, 'customer_type_id');
     }
 
-    public function location()
+    public function subdistrict()
     {
         return $this->belongsTo(MasterSubdistrict::class, 'master_location_id');
+    }
+
+    public function getDistrictAttribute()
+    {
+        return $this->subdistrict->district??null;
+    }
+
+    public function getCityAttribute()
+    {
+        return $this->district->city??null;
+    }
+
+    public function getProvinceAttribute()
+    {
+        return $this->city->province??null;
     }
 
     public function category()

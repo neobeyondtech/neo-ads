@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\IklanController;
+use App\Http\Controllers\AdvertisementController;
 use App\Http\Controllers\PembayaranController;
 use App\Http\Controllers\CustomerProfileController;
 use App\Http\Controllers\AccountController;
@@ -42,33 +42,41 @@ Route::get('/auth/google', [AuthController::class, 'redirectGoogle']);
 Route::get('/auth/google/callback', [AuthController::class, 'callbackGoogle']);
 
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-    
-    // Iklan Routes
-    Route::prefix('iklan')->group(function () {
-        Route::get('/', [IklanController::class, 'index'])->name('iklan.index');
-        Route::get('/create', [IklanController::class, 'create'])->name('iklan.create');
-        Route::post('/store', [IklanController::class, 'store'])->name('iklan.store');
-        Route::get('/detail/{id}', [IklanController::class, 'show'])->name('iklan.show');
-        Route::post('/detail/{id}/upload-stiker', [IklanController::class, 'uploadStiker'])
-    ->name('iklan.upload-stiker');
+    Route::get('/my-dashboard', [DashboardController::class, 'index'])->name('my-dashboard');
 
-    });
-    
     // Pembayaran Routes
-    Route::prefix('pembayaran')->group(function () { 
-        Route::get('/', [PembayaranController::class, 'index'])->name('pembayaran.index');
+    Route::prefix('my-payment')->group(function () { 
+        Route::get('/', [PembayaranController::class, 'index'])->name('my-payment.index');
+    });
+
+    // Iklan Routes
+    Route::prefix('my-ads')
+        ->name('my-ads.')
+        ->group(function () {
+        Route::get('/', [AdvertisementController::class, 'index'])->name('index');
+        Route::get('/create', [AdvertisementController::class, 'create'])->name('create');
+        Route::post('/store', [AdvertisementController::class, 'store'])->name('store');
+        Route::get('/detail/{advertisement}', [AdvertisementController::class, 'show'])->name('show');
+        Route::post('/calculate-price', [AdvertisementController::class, 'calculatePrice'])->name('calculate-price');
+        Route::get('/cancel/{advertisement}', [AdvertisementController::class, 'cancelOrder'])->name('cancel');
     });
     
     // Customer Profile Routes
-    Route::prefix('customer-profile')
-        ->name('customer-profile.')
+    Route::prefix('my-profile')
+        ->name('my-profile.')
         ->controller(CustomerProfileController::class)
         ->group(function () {
             Route::get('/', 'index')->name('index');
             Route::put('/update', 'update')->name('update');
             Route::put('/contact', 'updateContact')->name('update-contact');
         });
+
+    //Monitoring
+    Route::prefix('my-orders')
+        ->name('my-orders.')
+         ->group(function () {
+            Route::get('/', [PembayaranController::class, 'index'])->name('index');
+    });
 
     Route::prefix('profile')
         ->name('profile.')

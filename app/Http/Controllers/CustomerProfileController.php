@@ -24,21 +24,17 @@ class CustomerProfileController extends Controller
         $customer = $customer_user?->customer->first() ?? null;
         // Load location relationships for default values
         $locationData = null;
-        if ($customer && $customer->location) {
-            $subdistrict = $customer->location;
-            $district = $subdistrict->district ?? null;
-            $city = $district->city ?? null;
-            $province = $city->province ?? null;
+        if ($customer && $customer->subdistrict) {
             
             $locationData = [
-                'province_id' => $province->id ?? null,
-                'province_name' => $province->name ?? null,
-                'city_id' => $city->id ?? null,
-                'city_name' => $city->name ?? null,
-                'district_id' => $district->id ?? null,
-                'district_name' => $district->name ?? null,
-                'subdistrict_id' => $subdistrict->id ?? null,
-                'subdistrict_name' => $subdistrict->name ?? null,
+                'province_id' => $customer->province->id ?? null,
+                'province_name' => $customer->province->name ?? null,
+                'city_id' => $customer->city->id ?? null,
+                'city_name' => $customer->city->name ?? null,
+                'district_id' => $customer->district->id ?? null,
+                'district_name' => $customer->district->name ?? null,
+                'subdistrict_id' => $customer->subdistrict->id ?? null,
+                'subdistrict_name' => $customer->subdistrict->name ?? null,
             ];
         }
         
@@ -46,7 +42,7 @@ class CustomerProfileController extends Controller
             'customer_type' => CustomerType::get(),
             'customer_category' => CustomerCategory::get()
         ];
-        return view('profile.customer.index', compact('customer','customer_user', 'options', 'locationData'));
+        return view('customer.profile.index', compact('customer','customer_user', 'options', 'locationData'));
     }
 
     public function update(Request $request)

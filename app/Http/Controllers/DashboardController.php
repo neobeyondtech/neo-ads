@@ -15,7 +15,7 @@ class DashboardController extends Controller
         $user = Auth::user();
         $totalIklan = Iklan::where('user_id', $user->id)->count();
         
-        return view('dashboard.index', [
+        return view('customer.dashboard.index', [
             'user' => $user,
             'totalIklan' => $totalIklan,
         ]);

@@ -45,7 +45,7 @@
         </div>
     @endif
 
-    <form action="{{ route('customer-profile.update') }}" method="POST" class="space-y-6">
+    <form action="{{ route('my-profile.update') }}" method="POST" class="space-y-6">
         @csrf
         @method('PUT')
 
@@ -179,7 +179,7 @@
 
     </form>
 
-    <form action="{{ route('customer-profile.update-contact') }}" method="POST" class="space-y-8">
+    <form action="{{ route('my-profile.update-contact') }}" method="POST" class="space-y-8">
         @csrf
         @method('PUT')
 

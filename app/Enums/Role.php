@@ -18,4 +18,29 @@ enum Role: int
             Role::PARTNER => 'Partner',
         };
     }
+
+    public function menus(): array
+    {
+         return match($this) {
+            Role::SUPER_ADMIN => ['my-dashboard', 'user-management', 'reports', 'settings'],
+            Role::ADMIN => [],
+            Role::CUSTOMER => ['my-dashboard', 'my-ads', 'my-payment', 'my-profile', 'my-orders'],
+            Role::PARTNER => [],
+        };
+    }
+
+    public function privileges(): array
+    {
+        return match($this) {
+            Role::SUPER_ADMIN => ['my-dashboard'=> ['all'], 'user-management' => ['all'], 'reports' => ['all'], 'settings' => ['all']],
+            Role::ADMIN => [],
+            Role::CUSTOMER => [
+                'my-dashboard'=> ['all'], 
+                'my-ads' => ['create', 'view', 'edit'],
+                'my-payment' => ['view'], 
+                'my-profile' => ['view', 'edit'], 
+                'my-orders' => ['view']],
+            Role::PARTNER => ['view-partner-data'],
+        };
+    }
 }

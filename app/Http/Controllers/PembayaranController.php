@@ -40,6 +40,6 @@ class PembayaranController extends Controller
 
         $saldoAkhir = $saldoDeposit - $totalPengeluaran;
 
-        return view('pembayaran.index', compact('pembayaran', 'riwayatDeposit', 'saldoAkhir'));
+        return view('customer.payment.index', compact('pembayaran', 'riwayatDeposit', 'saldoAkhir'));
     }
 }
