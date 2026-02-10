@@ -87,7 +87,7 @@ class AuthController extends Controller
                 ]);
             }
 
-            if(Auth::user()->role() == Role::CUSTOMER->value){
+            if(Auth::user()->role == Role::CUSTOMER){
                 ActivityLog::logAuth('login', 'Customer logged in successfully');
                 return redirect()->intended('/customer-profile');
             }else{
@@ -170,7 +170,7 @@ class AuthController extends Controller
         Auth::login($user);
 
         ActivityLog::logAuth('login', 'Logged in with Google account');
-        if(Auth::user()->role() == Role::CUSTOMER->value){
+        if(Auth::user()->role == Role::CUSTOMER){
             return redirect('/customer-profile');
         }else{  
             return redirect('/dashboard');
@@ -216,9 +216,7 @@ class AuthController extends Controller
             function ($user) use ($request) {
                 $user->forceFill([
                     'password' => Hash::make($request->password),
-                    'reset_password_token' => Str::random(60),
                 ])->save();
-
                 event(new PasswordReset($user));
             }
         );

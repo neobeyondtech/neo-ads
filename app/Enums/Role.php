@@ -2,10 +2,20 @@
 
 namespace App\Enums;
 
-enum Role: string
+enum Role: int
 {
-    case SUPER_ADMIN = 'super_admin';
-    case ADMIN = 'admin';
-    case CUSTOMER = 'customer';
-    case PARTNER = 'partner';
+    case SUPER_ADMIN = 1;
+    case ADMIN = 2;
+    case CUSTOMER = 3;
+    case PARTNER = 4;
+
+    public function label(): string
+    {
+        return match($this) {
+            Role::SUPER_ADMIN => 'Super Admin',
+            Role::ADMIN => 'Admin',
+            Role::CUSTOMER => 'Customer',
+            Role::PARTNER => 'Partner',
+        };
+    }
 }

@@ -26,6 +26,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'password',
         'remember_token',
         'photo',
+        'role',
     ];
 
     /**
@@ -61,8 +62,14 @@ class User extends Authenticatable implements MustVerifyEmail
         $this->notify(new ResetPasswordIndo($token));
     }
 
-    public function role()
+   //muttator role to enum
+    public function getRoleAttribute($value): ?Role
     {
-        return Role::CUSTOMER->value;
+         return $value ? Role::from($value) : Role::CUSTOMER;
+    }
+
+    public function isAdmin(): bool
+    {
+        return $this->role === Role::ADMIN;
     }
 }
