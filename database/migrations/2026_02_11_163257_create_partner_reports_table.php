@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('partner_reports', function (Blueprint $table) {
             $table->id(); // Report ID
 
-            $table->unsignedBigInteger('ad_id');       
+            $table->unsignedBigInteger('advertisement_id');       
             $table->unsignedBigInteger('partner_id');  
 
             // Images
@@ -35,7 +35,7 @@ return new class extends Migration
             $table->timestamps();
             $table->softDeletes(); 
 
-            $table->index('ad_id');
+            $table->index('advertisement_id');
             $table->index('partner_id');
             $table->index('status');
         });

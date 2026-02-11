@@ -58,6 +58,31 @@ class Advertisement extends Model
         return $this->belongsTo(MasterCity::class, 'target_location_id');
     }
 
+    public function transactions()
+    {
+        return $this->hasMany(Transaction::class);
+    }
+
+    public function stickers()
+    {
+        return $this->hasMany(AdvertisementSticker::class);
+    }
+    
+    public function partners()
+    {
+        return $this->belongsToMany(Partner::class, 'enrollments', 'advertisement_id', 'partner_id');
+    }
+
+    public function reports()
+    {
+        return $this->hasMany(PartnerReport::class, 'advertisement_id');
+    }
+
+    public function payouts()
+    {
+        return $this->hasMany(Payout::class, 'advertisement_id');
+    }
+
     public static function calculatePrice($stickerAreaType, $targetPartner, $targetDistance)
     {
         $price = StickerAreaType::from($stickerAreaType)->price();

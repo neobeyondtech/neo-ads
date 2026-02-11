@@ -11,7 +11,7 @@ class Transaction extends Model
     use hasFactory, SoftDeletes;
 
     protected $fillable = [
-        'ad_id',
+        'advertisement_id',
         'customer_id',
         'amount',
         'payment_status',
@@ -29,7 +29,7 @@ class Transaction extends Model
     ];
 
     // Relationships
-    public function ad()
+    public function advertisement()
     {
         return $this->belongsTo(Advertisement::class);
     }

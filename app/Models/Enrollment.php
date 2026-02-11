@@ -10,7 +10,7 @@ class Enrollment extends Model
 {
     use HasFactory, SoftDeletes;
     protected $fillable = [
-        'ad_id',
+        'advertisement_id',
         'partner_id',
         'status',
         'remarks',
@@ -35,7 +35,7 @@ class Enrollment extends Model
     ];
 
     // Relationships
-    public function ad()
+    public function advertisement()
     {
         return $this->belongsTo(Advertisement::class);
     }

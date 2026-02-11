@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('payouts', function (Blueprint $table) {
             $table->id(); // id
 
-            $table->unsignedBigInteger('ad_id');
+            $table->unsignedBigInteger('advertisement_id');
             $table->unsignedBigInteger('partner_id');
 
             $table->decimal('amount', 15, 2);
@@ -31,7 +31,7 @@ return new class extends Migration
             $table->timestamps(); 
             $table->softDeletes(); 
 
-            $table->index('ad_id');
+            $table->index('advertisement_id');
             $table->index('partner_id');
             $table->index('payment_status');
         });

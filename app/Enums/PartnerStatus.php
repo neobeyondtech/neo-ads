@@ -11,18 +11,30 @@ enum PartnerStatus: string
     case SUSPENDED = 'suspended';
     case REJECTED = 'rejected';
 
+ 
+    public function label(): string
+    {
+        return match($this) {
+            self::DRAFT => 'Draft',
+            self::PENDING_VERIFICATION => 'Pending Verification',
+            self::ACTIVE => 'Active',
+            self::INACTIVE => 'Inactive',
+            self::SUSPENDED => 'Suspended',
+            self::REJECTED => 'Rejected',
+        };
+    }
+
     /**
-     * Return an array for dropdown lists
+     * Dropdown-ready list
      */
     public static function options(): array
     {
-        return [
-            self::DRAFT->value => 'Draft',
-            self::PENDING_VERIFICATION->value => 'Pending Verification',
-            self::ACTIVE->value => 'Active',
-            self::INACTIVE->value => 'Inactive',
-            self::SUSPENDED->value => 'Suspended',
-            self::REJECTED->value => 'Rejected',
-        ];
+        return array_map(
+            fn ($case) => [
+                'value' => $case->value,
+                'label' => $case->label(),
+            ],
+            self::cases()
+        );
     }
 }

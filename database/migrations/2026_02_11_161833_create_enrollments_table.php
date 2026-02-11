@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id(); // Submission ID
 
             $table->unsignedBigInteger('partner_id'); 
-            $table->unsignedBigInteger('ad_id'); 
+            $table->unsignedBigInteger('advertisement_id'); 
 
             $table->string('status')->default('pending'); 
             $table->text('remarks')->nullable(); 
@@ -35,7 +35,7 @@ return new class extends Migration
             $table->softDeletes();
 
             $table->index('partner_id');
-            $table->index('ad_id');
+            $table->index('advertisement_id');
             $table->index('status');
         });
     }

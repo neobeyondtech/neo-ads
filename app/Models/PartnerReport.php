@@ -9,7 +9,7 @@ class PartnerReport extends Model
     use HasFactory, SoftDeletes;
     
     protected $fillable = [
-        'ad_id',
+        'advertisement_id',
         'partner_id',
         'img_vehicle_stickers',
         'img_odometer',
@@ -28,7 +28,7 @@ class PartnerReport extends Model
         'reviewed_at' => 'datetime',
     ];
 
-    public function ad()
+    public function advertisement()
     {
         return $this->belongsTo(Advertisement::class);
     }
