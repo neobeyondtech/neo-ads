@@ -3,8 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Iklan;
-use App\Models\Deposit;
-use App\Models\PembayaranIklan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 

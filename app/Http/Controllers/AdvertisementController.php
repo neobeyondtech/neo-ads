@@ -7,21 +7,38 @@ use App\Models\MasterCity;
 use App\Models\Partner;
 use App\Enums\GoalType;
 use App\Enums\StickerAreaType;
+use App\Traits\HasPermissions;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
+use App\Facades\ActivityLog;
 use Carbon\Carbon;
 
 class AdvertisementController extends Controller
 {
+    use HasPermissions;
+
     /**
      * Display a listing of the resource.
      */
     public function index(Request $request)
     {
         $user = Auth::user();
+
+        // Check permission to view advertisements
+        $viewPermissionLevel = $this->getViewPermissionLevel('my-ads');
+        if (!$viewPermissionLevel) {
+            return redirect()->route('my-dashboard')->with('error', 'You do not have permission to view advertisements.');
+        }
+
         $status = $request->get('status', '');
         
-        $query = Advertisement::where('customer_id', $user->id);
+        // Apply permission-based filtering
+        if ($viewPermissionLevel === 'own') {
+            $query = Advertisement::with('transactions')->where('customer_id', $user->id);
+        } else {
+            $query = Advertisement::with('transactions');
+        }
 
         // Filter by status if provided
         if ($status && $status !== 'all') {
@@ -47,6 +64,12 @@ class AdvertisementController extends Controller
      */
     public function create()
     {
+        // Check create permission
+        $authResponse = $this->authorizeAction('my-ads.create', 'You do not have permission to create advertisements.');
+        if ($authResponse) {
+            return redirect()->route('my-dashboard')->withErrors(['permission' => $authResponse->getData()->message]);
+        }
+
         $goalTypes = GoalType::options();
         $stickerAreas = StickerAreaType::options();
         $cities = MasterCity::orderBy('name')->get();
@@ -59,52 +82,62 @@ class AdvertisementController extends Controller
      */
     public function store(Request $request)
     {
-        $minStartdate = Carbon::now()->addWeeks(2)->format('Y-m-d');
-        $minEnddate = $request->startdate 
-        ? Carbon::parse($request->startdate)->addDays(30)->format('Y-m-d')
-        : null;
-
-        $validated = $request->validate([
-            'title' => 'required|string|max:255',
-            'goal_type' => 'required|string|in:' . implode(',', GoalType::values()),
-            'target_location_id' => 'required|exists:master_cities,id',
-            'sticker_area_type' => 'required|string|in:' . implode(',', StickerAreaType::values()),
-            'target_distance' => 'required|numeric|min:100',
-            'target_partner' => 'nullable|numeric|min:1',
-            'startdate' => 'required|date|after_or_equal:' . $minStartdate,
-            'enddate' => 'nullable|date|after_or_equal:' . $minEnddate,
-            'total_budget' => 'nullable|numeric|min:0',
-            'description' => 'nullable|string|max:1000',
-        ]);
-
-        $user = Auth::user();
-        
-        // Calculate duration if enddate is provided
-        $duration = null;
-        if ($request->filled('enddate')) {
-            $start = Carbon::parse($validated['startdate']);
-            $end = Carbon::parse($validated['enddate']);
-            $duration = $start->diffInDays($end);
+        // Check create permission
+        $authResponse = $this->authorizeAction('my-ads.create', 'You do not have permission to create advertisements.');
+        if ($authResponse) {
+            return redirect()->back()->withErrors(['permission' => $authResponse->getData()->message]);
         }
 
-        $advertisement = Advertisement::create([
-            'customer_id' => $user->id,
-            'title' => $validated['title'],
-            'goal_type' => $validated['goal_type'],
-            'sticker_area_type' => $validated['sticker_area_type'],
-            'target_location_id' => $validated['target_location_id'],
-            'target_distance' => $validated['target_distance'],
-            'target_partner' => $validated['target_partner'] ?? null,
-            'startdate' => $validated['startdate'],
-            'enddate' => $validated['enddate'] ?? null,
-            'duration' => $duration,
-            'total_budget' => Advertisement::calculatePrice($validated['sticker_area_type'],$validated['target_partner'],$validated['target_distance']),
-            'description' => $validated['description'] ?? null,
-            'status' => 'draft',
-            'draft_at' => Carbon::now(),
-        ]);
+        try{
+            $minStartdate = Carbon::now()->addWeeks(2)->format('Y-m-d');
+            $minEnddate = $request->startdate 
+            ? Carbon::parse($request->startdate)->addDays(30)->format('Y-m-d')
+            : null;
 
-        return redirect()->route('my-ads.index')->with('success', 'Iklan berhasil dibuat!');
+            $validated = $request->validate([
+                'title' => 'required|string|max:255',
+                'goal_type' => 'required|string|in:' . implode(',', GoalType::values()),
+                'target_location_id' => 'required|exists:master_cities,id',
+                'sticker_area_type' => 'required|string|in:' . implode(',', StickerAreaType::values()),
+                'target_distance' => 'required|numeric|min:100',
+                'target_partner' => 'nullable|numeric|min:1',
+                'startdate' => 'required|date|after_or_equal:' . $minStartdate,
+                'enddate' => 'nullable|date|after_or_equal:' . $minEnddate,
+                'total_budget' => 'nullable|numeric|min:0',
+                'description' => 'nullable|string|max:1000',
+            ]);
+
+            $user = Auth::user();
+            
+            // Calculate duration if enddate is provided
+            $duration = null;
+            if ($request->filled('enddate')) {
+                $start = Carbon::parse($validated['startdate']);
+                $end = Carbon::parse($validated['enddate']);
+                $duration = $start->diffInDays($end);
+            }
+
+            $advertisement = Advertisement::create([
+                'customer_id' => $user->id,
+                'title' => $validated['title'],
+                'goal_type' => $validated['goal_type'],
+                'sticker_area_type' => $validated['sticker_area_type'],
+                'target_location_id' => $validated['target_location_id'],
+                'target_distance' => $validated['target_distance'],
+                'target_partner' => $validated['target_partner'] ?? null,
+                'startdate' => $validated['startdate'],
+                'enddate' => $validated['enddate'] ?? null,
+                'duration' => $duration,
+                'total_budget' => Advertisement::calculatePrice($validated['sticker_area_type'],$validated['target_partner'],$validated['target_distance']),
+                'description' => $validated['description'] ?? null,
+                'status' => 'draft',
+                'draft_at' => Carbon::now(),
+            ]);
+            ActivityLog::log($user->id, 'Membuat iklan baru dengan ID: ' . $advertisement->id, 'advertisement_create', $advertisement->toArray());
+            return redirect()->route('my-ads.index')->with('success', 'Iklan berhasil dibuat!');
+        }catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Terjadi kesalahan saat membuat iklan: ' . $e->getMessage())->withInput();
+        }
     }
 
     /**
@@ -112,6 +145,13 @@ class AdvertisementController extends Controller
      */
     public function show(Advertisement $advertisement)
     {
+        $user = Auth::user();
+
+        // Check if user has permission to view this advertisement
+        if (!$this->canPerform('view_own', 'my-ads', $advertisement->customer_id) && $user->id !== $advertisement->customer_id) {
+            return redirect()->route('my-dashboard')->with('error', 'You do not have permission to view this advertisement.');
+        }
+
         return view('customer.advertisement.detail', compact('advertisement'));
     }
 
@@ -234,13 +274,26 @@ class AdvertisementController extends Controller
      */
     public function cancelOrder(Request $request, Advertisement $advertisement)
     {
+        $user = Auth::user();
+
+        // Check if user has permission to cancel this advertisement
+        if (!$this->canPerform('edit_own', 'my-ads', $advertisement->customer_id) && $user->id !== $advertisement->customer_id) {
+            return redirect()->route('my-ads.index')->with('error', 'You do not have permission to cancel this advertisement.');
+        }
+
         // Only allow canceling if status is 'draft' or 'on_review'
         if(!$advertisement->allow_cancel) {
             return redirect()->route('my-ads.index')->with('error', 'Iklan tidak dapat dibatalkan pada status saat ini.');
         }
-        $advertisement->status = 'cancel';
-        $advertisement->cancel_at = Carbon::now();
-        $advertisement->save();
-        return redirect()->route('my-ads.index')->with('success', 'Iklan berhasil dibatalkan.');
+        try{
+            $advertisement->status = 'cancel';
+            $advertisement->cancel_at = Carbon::now();
+            $advertisement->save();
+            ActivityLog::log(Auth::id(), 'Membatalkan iklan dengan ID: ' . $advertisement->id, 'advertisement_cancel', $advertisement->toArray());
+            return redirect()->route('my-ads.index')->with('success', 'Iklan berhasil dibatalkan.');
+        }catch (\Exception $e) {
+            Log::error('Error canceling advertisement ID ' . $advertisement->id . ': ' . $e->getMessage());
+            return redirect()->route('my-ads.index')->with('error', 'Terjadi kesalahan saat membatalkan iklan: ' . $e->getMessage());
+        }
     }
 }
