@@ -72,4 +72,51 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->role === Role::ADMIN;
     }
+
+    /**
+     * Check if user has a specific permission based on their role
+     */
+    public function hasPermission(string $permission): bool
+    {
+        if (!$this->role) {
+            return false;
+        }
+
+        return $this->role->hasPermission($permission);
+    }
+
+    /**
+     * Check if user can perform an action on a resource
+     */
+    public function canPerform(string $action, string $resource, $resourceOwnerId = null): bool
+    {
+        if (!$this->role) {
+            return false;
+        }
+
+        // Check if user has the permission for this action on the resource
+        if (!$this->role->canPerform($action, $resource)) {
+            return false;
+        }
+
+        // Additional ownership check for _own permissions
+        if ($this->hasPermission("{$resource}.{$action}_own")) {
+            // User can only perform action on their own resource
+            return $resourceOwnerId === null || $resourceOwnerId == $this->id;
+        }
+
+        return true;
+    }
+
+    /**
+     * Get user's privileges
+     */
+    public function getPrivileges(): array
+    {
+        if (!$this->role) {
+            return [];
+        }
+
+        return $this->role->privileges();
+    }
 }
