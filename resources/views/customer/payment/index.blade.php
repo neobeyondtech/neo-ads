@@ -41,39 +41,62 @@
                             <th class="px-4 py-3 text-left">No</th>
                             <th class="px-4 py-3 text-left">Tanggal</th>
                             <th class="px-4 py-3 text-left">Judul Iklan</th>
-                            <th class="px-4 py-3 text-left">XXX</th>
+                            <th class="px-4 py-3 text-left">Metode</th>
                             <th class="px-4 py-3 text-left">Biaya</th>
                             <th class="px-4 py-3 text-left">Status</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach($pembayaran as $item)
-                        <tr class="border-t">
+                        @forelse($transactions as $item)
+                        <tr class="border-t hover:bg-gray-50">
                             <td class="px-4 py-3">{{ $loop->iteration }}</td>
                             <td class="px-4 py-3">
-                                {{ \Carbon\Carbon::parse($item->tanggal_pembayaran)->translatedFormat('d F Y') }}
+                                @if($item->payment_date)
+                                    {{ $item->payment_date->translatedFormat('d F Y') }}
+                                @else
+                                    -
+                                @endif
                             </td>
-                            <td class="px-4 py-3">{{ $item->iklan->judul_iklan ?? '-' }}</td>
-                            <td class="px-4 py-3">XXX</td>
+                            <td class="px-4 py-3 font-medium text-gray-700">
+                                {{ $item->advertisement->title ?? '-' }}
+                            </td>
+                            <td class="px-4 py-3 text-gray-600">
+                                {{ ucfirst(str_replace('_', ' ', $item->payment_method ?? '-')) }}
+                            </td>
                             <td class="px-4 py-3 text-red-600 font-medium">
-                                -Rp{{ number_format($item->jumlah,0,',','.') }}
+                                -Rp{{ number_format($item->amount, 0, ',', '.') }}
                             </td>
-                            <td class="px-4 py-3 text-gray-700">
-                                {{ $item->status }}
+                            <td class="px-4 py-3">
+                                <span class="text-xs px-2 py-1 rounded-full
+                                    @if($item->payment_status === 'paid') bg-green-100 text-green-800
+                                    @elseif($item->payment_status === 'pending') bg-yellow-100 text-yellow-800
+                                    @elseif($item->payment_status === 'failed') bg-red-100 text-red-800
+                                    @else bg-gray-100 text-gray-800
+                                    @endif
+                                ">
+                                    {{ ucfirst($item->payment_status) }}
+                                </span>
                             </td>
                         </tr>
-                        @endforeach
+                        @empty
+                        <tr>
+                            <td colspan="6" class="px-4 py-8 text-center text-gray-500">
+                                Belum ada transaksi
+                            </td>
+                        </tr>
+                        @endforelse
                     </tbody>
                 </table>
 
                 {{-- Pagination --}}
+                @if($transactions->count() > 0)
                 <div class="flex justify-between items-center px-4 py-3 text-sm text-gray-500">
-                    <span>Showing 10 from 12 data</span>
+                    <span>Showing {{ $transactions->firstItem() ?? 0 }} to {{ $transactions->lastItem() ?? 0 }} from {{ $transactions->total() }} data</span>
                     <div class="flex gap-1">
-                        <button class="px-3 py-1 bg-blue-900 text-white rounded">1</button>
-                        <button class="px-3 py-1 border rounded">2</button>
+                        {{ $transactions->links() }}
                     </div>
                 </div>
+                @endif
             </div>
         </div>
         
@@ -86,7 +109,7 @@
                     Saldo Deposit
                 </h3>
                 <p class="text-3xl font-bold text-blue-700">
-                    Rp{{ number_format($saldoAkhir,0,',','.') }}
+                    Rp{{ number_format($balance,0,',','.') }}
                 </p>
             </div>
 
@@ -117,7 +140,7 @@
                 </h4>
 
                 <div class="space-y-2 text-sm">
-                    @foreach($riwayatDeposit as $deposit)
+                    @foreach($transactionDeposits as $deposit)
                     <div class="flex justify-between">
                         <span class="text-gray-500">
                             {{ \Carbon\Carbon::parse($deposit->tanggal_transaksi)->translatedFormat('d F Y') }}

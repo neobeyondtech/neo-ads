@@ -5,7 +5,7 @@ use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\AdvertisementController;
-use App\Http\Controllers\PembayaranController;
+use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\CustomerProfileController;
 use App\Http\Controllers\AccountController;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
@@ -46,7 +46,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     // Pembayaran Routes
     Route::prefix('my-payment')->group(function () { 
-        Route::get('/', [PembayaranController::class, 'index'])->name('my-payment.index');
+        Route::get('/', [TransactionController::class, 'index'])->name('my-payment.index');
     });
 
     // Iklan Routes
@@ -75,7 +75,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::prefix('my-orders')
         ->name('my-orders.')
          ->group(function () {
-            Route::get('/', [PembayaranController::class, 'index'])->name('index');
+            Route::get('/', [TransactionController::class, 'index'])->name('index');
     });
 
     Route::prefix('profile')
@@ -85,5 +85,204 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::post('/photo', 'updatePhoto')->name('update-photo');
             Route::get('/change-password', 'index')->name('index');
             Route::post('/change-password', 'update')->name('update-password');
+        });
+
+    // Admin Routes
+    Route::prefix('admin')
+        ->name('admin.')
+        ->middleware(['auth', 'verified'])
+        ->group(function () {
+            Route::get('/dashboard', [\App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('dashboard');
+            
+            // Advertisements
+            Route::prefix('advertisements')
+                ->name('advertisements.')
+                ->controller(\App\Http\Controllers\Admin\AdvertisementController::class)
+                ->group(function () {
+                    Route::get('/', 'index')->name('index');
+                    Route::get('/create', 'create')->name('create');
+                    Route::post('/', 'store')->name('store');
+                    Route::get('/{advertisement}', 'show')->name('show');
+                    Route::get('/{advertisement}/edit', 'edit')->name('edit');
+                    Route::put('/{advertisement}', 'update')->name('update');
+                    Route::delete('/{advertisement}', 'destroy')->name('destroy');
+                });
+
+            // Customers
+            Route::prefix('customers')
+                ->name('customers.')
+                ->controller(\App\Http\Controllers\Admin\CustomerController::class)
+                ->group(function () {
+                    Route::get('/', 'index')->name('index');
+                    Route::get('/create', 'create')->name('create');
+                    Route::post('/', 'store')->name('store');
+                    Route::get('/{customer}', 'show')->name('show');
+                    Route::get('/{customer}/edit', 'edit')->name('edit');
+                    Route::put('/{customer}', 'update')->name('update');
+                    Route::delete('/{customer}', 'destroy')->name('destroy');
+                });
+
+            // Partners
+            Route::prefix('partners')
+                ->name('partners.')
+                ->controller(\App\Http\Controllers\Admin\PartnerController::class)
+                ->group(function () {
+                    Route::get('/', 'index')->name('index');
+                    Route::get('/create', 'create')->name('create');
+                    Route::post('/', 'store')->name('store');
+                    Route::get('/{partner}', 'show')->name('show');
+                    Route::get('/{partner}/edit', 'edit')->name('edit');
+                    Route::put('/{partner}', 'update')->name('update');
+                    Route::delete('/{partner}', 'destroy')->name('destroy');
+                });
+
+            // Transactions
+            Route::prefix('transactions')
+                ->name('transactions.')
+                ->controller(\App\Http\Controllers\Admin\TransactionController::class)
+                ->group(function () {
+                    Route::get('/', 'index')->name('index');
+                    Route::get('/create', 'create')->name('create');
+                    Route::post('/', 'store')->name('store');
+                    Route::get('/{transaction}', 'show')->name('show');
+                    Route::get('/{transaction}/edit', 'edit')->name('edit');
+                    Route::put('/{transaction}', 'update')->name('update');
+                    Route::delete('/{transaction}', 'destroy')->name('destroy');
+                });
+
+            // Users
+            Route::prefix('users')
+                ->name('users.')
+                ->controller(\App\Http\Controllers\Admin\UserController::class)
+                ->group(function () {
+                    Route::get('/', 'index')->name('index');
+                    Route::get('/create', 'create')->name('create');
+                    Route::post('/', 'store')->name('store');
+                    Route::get('/{user}', 'show')->name('show');
+                    Route::get('/{user}/edit', 'edit')->name('edit');
+                    Route::put('/{user}', 'update')->name('update');
+                    Route::delete('/{user}', 'destroy')->name('destroy');
+                });
+
+            // Provinces
+            Route::prefix('provinces')
+                ->name('provinces.')
+                ->controller(\App\Http\Controllers\Admin\ProvinceController::class)
+                ->group(function () {
+                    Route::get('/', 'index')->name('index');
+                    Route::get('/create', 'create')->name('create');
+                    Route::post('/', 'store')->name('store');
+                    Route::get('/{province}/edit', 'edit')->name('edit');
+                    Route::put('/{province}', 'update')->name('update');
+                    Route::delete('/{province}', 'destroy')->name('destroy');
+                });
+
+            // Cities
+            Route::prefix('cities')
+                ->name('cities.')
+                ->controller(\App\Http\Controllers\Admin\CityController::class)
+                ->group(function () {
+                    Route::get('/', 'index')->name('index');
+                    Route::get('/create', 'create')->name('create');
+                    Route::post('/', 'store')->name('store');
+                    Route::get('/{city}/edit', 'edit')->name('edit');
+                    Route::put('/{city}', 'update')->name('update');
+                    Route::delete('/{city}', 'destroy')->name('destroy');
+                });
+
+            // Vehicle Brands
+            Route::prefix('vehicle-brands')
+                ->name('vehicle-brands.')
+                ->controller(\App\Http\Controllers\Admin\VehicleBrandController::class)
+                ->group(function () {
+                    Route::get('/', 'index')->name('index');
+                    Route::get('/create', 'create')->name('create');
+                    Route::post('/', 'store')->name('store');
+                    Route::get('/{brand}/edit', 'edit')->name('edit');
+                    Route::put('/{brand}', 'update')->name('update');
+                    Route::delete('/{brand}', 'destroy')->name('destroy');
+                });
+
+            // Banks
+            Route::prefix('banks')
+                ->name('banks.')
+                ->controller(\App\Http\Controllers\Admin\BankController::class)
+                ->group(function () {
+                    Route::get('/', 'index')->name('index');
+                    Route::get('/create', 'create')->name('create');
+                    Route::post('/', 'store')->name('store');
+                    Route::get('/{bank}/edit', 'edit')->name('edit');
+                    Route::put('/{bank}', 'update')->name('update');
+                    Route::delete('/{bank}', 'destroy')->name('destroy');
+                });
+
+            // Payouts
+            Route::prefix('payouts')
+                ->name('payouts.')
+                ->controller(\App\Http\Controllers\Admin\PayoutController::class)
+                ->group(function () {
+                    Route::get('/', 'index')->name('index');
+                    Route::get('/create', 'create')->name('create');
+                    Route::post('/', 'store')->name('store');
+                    Route::get('/{payout}', 'show')->name('show');
+                    Route::get('/{payout}/edit', 'edit')->name('edit');
+                    Route::put('/{payout}', 'update')->name('update');
+                    Route::delete('/{payout}', 'destroy')->name('destroy');
+                });
+
+            // Enrollments
+            Route::prefix('enrollments')
+                ->name('enrollments.')
+                ->controller(\App\Http\Controllers\Admin\EnrollmentController::class)
+                ->group(function () {
+                    Route::get('/', 'index')->name('index');
+                    Route::get('/create', 'create')->name('create');
+                    Route::post('/', 'store')->name('store');
+                    Route::get('/{enrollment}', 'show')->name('show');
+                    Route::get('/{enrollment}/edit', 'edit')->name('edit');
+                    Route::put('/{enrollment}', 'update')->name('update');
+                    Route::delete('/{enrollment}', 'destroy')->name('destroy');
+                });
+
+            // Reports
+            Route::prefix('reports')
+                ->name('reports.')
+                ->controller(\App\Http\Controllers\Admin\ReportController::class)
+                ->group(function () {
+                    Route::get('/', 'index')->name('index');
+                    Route::get('/create', 'create')->name('create');
+                    Route::post('/', 'store')->name('store');
+                    Route::get('/{report}', 'show')->name('show');
+                    Route::get('/{report}/edit', 'edit')->name('edit');
+                    Route::put('/{report}', 'update')->name('update');
+                    Route::delete('/{report}', 'destroy')->name('destroy');
+                });
+
+            // Districts
+            Route::prefix('districts')
+                ->name('districts.')
+                ->controller(\App\Http\Controllers\Admin\DistrictController::class)
+                ->group(function () {
+                    Route::get('/', 'index')->name('index');
+                    Route::get('/create', 'create')->name('create');
+                    Route::post('/', 'store')->name('store');
+                    Route::get('/{district}/edit', 'edit')->name('edit');
+                    Route::put('/{district}', 'update')->name('update');
+                    Route::delete('/{district}', 'destroy')->name('destroy');
+                });
+
+            // Subdistricts
+            Route::prefix('subdistricts')
+                ->name('subdistricts.')
+                ->controller(\App\Http\Controllers\Admin\SubdistrictController::class)
+                ->group(function () {
+                    Route::get('/', 'index')->name('index');
+                    Route::get('/create', 'create')->name('create');
+                    Route::post('/', 'store')->name('store');
+                    Route::get('/{subdistrict}/edit', 'edit')->name('edit');
+                    Route::put('/{subdistrict}', 'update')->name('update');
+                    Route::delete('/{subdistrict}', 'destroy')->name('destroy');
+                });
+
         });
 });

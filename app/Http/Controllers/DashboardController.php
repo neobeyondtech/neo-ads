@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Iklan;
+use App\Models\Advertisement;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -11,11 +11,11 @@ class DashboardController extends Controller
     public function index()
     {
         $user = Auth::user();
-        $totalIklan = Iklan::where('user_id', $user->id)->count();
+        $addsCount = 0;
         
         return view('customer.dashboard.index', [
             'user' => $user,
-            'totalIklan' => $totalIklan,
+            'addsCount' => $addsCount,
         ]);
     }
 }
