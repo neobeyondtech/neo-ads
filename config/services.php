@@ -39,6 +39,13 @@ return [
         'client_secret' => env('GOOGLE_CLIENT_SECRET'),
         'redirect' => env('GOOGLE_REDIRECT_URI'),
     ],
-
+    'recaptcha' => [
+        'site_key' => env('RECAPTCHA_SITE_KEY', '6LfbPGQsAAAAAJ617dtblNWEccWgToEYfshCJ2qf'),
+        'secret_key' => env('RECAPTCHA_SECRET_KEY', '6LfbPGQsAAAAAHQwQA99GxDUtGuQaO-hMHwHt3mA'),
+    ],
+    'whatsapp' => [
+        'number' => env('WHATSAPP_NUMBER', '6287819073201'),
+        'default_message' => env('WHATSAPP_MESSAGE', 'Halo, saya ingin bertanya'),
+    ],
 
 ];

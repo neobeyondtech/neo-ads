@@ -2,6 +2,7 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', 'NeoAds')</title>
     @vite('resources/css/app.css')
     <link rel="stylesheet"
@@ -313,3 +314,43 @@ document.getElementById('passwordModal').addEventListener('click', function(even
     }
 });
 </script>
+
+<!-- SweetAlert2 CSS -->
+<link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
+
+<!-- SweetAlert2 JS -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<!-- Success Popup Script -->
+@if(session('success'))
+<script>
+    Swal.fire({
+        title: 'Berhasil!',
+        text: '{{ session('success') }}',
+        icon: 'success',
+        confirmButtonText: 'OK',
+        confirmButtonColor: '#3085d6',
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // Already on index page, no need to redirect
+            // Or you can redirect to another page:
+            // window.location.href = '{{ route('my-ads.index') }}';
+        }
+    });
+</script>
+@endif
+
+@if(session('error'))
+<script>
+    Swal.fire({
+        title: 'Error!',
+        text: '{{ session('error') }}',
+        icon: 'error',
+        confirmButtonText: 'OK',
+        confirmButtonColor: '#d33',
+    });
+</script>
+@endif
+<!-- WhatsApp Floating Button -->
+    <x-whatsapp-float />
+</body>
