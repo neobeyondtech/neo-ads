@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use App\Facades\ActivityLog;
 use Carbon\Carbon;
+use App\Enums\OrderStatus;
 
 class AdvertisementController extends Controller
 {
@@ -91,14 +92,14 @@ class AdvertisementController extends Controller
         try{
             $minStartdate = Carbon::now()->addWeeks(2)->format('Y-m-d');
             $minEnddate = $request->startdate 
-            ? Carbon::parse($request->startdate)->addDays(30)->format('Y-m-d')
-            : null;
+            ? Carbon::parse($request->startdate)->addDays(15)->format('Y-m-d')
+            : Carbon::parse($minStartdate)->addDays(15)->format('Y-m-d');
 
             $validated = $request->validate([
                 'title' => 'required|string|max:255',
-                'goal_type' => 'required|string|in:' . implode(',', GoalType::values()),
-                'target_location_id' => 'required|exists:master_cities,id',
-                'sticker_area_type' => 'required|string|in:' . implode(',', StickerAreaType::values()),
+                'goal_type' => 'required',
+                'target_location_id' => 'required',
+                'sticker_area_type' => 'required',
                 'target_distance' => 'required|numeric|min:100',
                 'target_partner' => 'nullable|numeric|min:1',
                 'startdate' => 'required|date|after_or_equal:' . $minStartdate,
@@ -117,6 +118,23 @@ class AdvertisementController extends Controller
                 $duration = $start->diffInDays($end);
             }
 
+            //check if data have been save 2 minute later with same all data
+            $existingAd = Advertisement::where('customer_id', $user->id)
+                ->where('title', $validated['title'])
+                ->where('status', OrderStatus::DRAFT->value)
+                ->where('goal_type', $validated['goal_type'])
+                ->where('sticker_area_type', $validated['sticker_area_type'])
+                ->where('target_location_id', $validated['target_location_id'])
+                ->where('target_distance', $validated['target_distance'])
+                ->where('target_partner', $validated['target_partner'] ?? null)
+                ->where('startdate', $validated['startdate'])
+                ->where('enddate', $validated['enddate'] ?? null)
+                ->where('created_at', '>=', Carbon::now()->subMinutes(2))
+                ->first();
+
+            if ($existingAd) {
+                return redirect()->route('my-ads.index')->with('success', "Campaign $existingAd->title sudah tersimpan. Tim kami akan melakukan verifikasi dan menghubungi Anda dalam waktu maksimal 2x24 jam untuk langkah selanjutnya.!");
+            }
             $advertisement = Advertisement::create([
                 'customer_id' => $user->id,
                 'title' => $validated['title'],
@@ -130,12 +148,16 @@ class AdvertisementController extends Controller
                 'duration' => $duration,
                 'total_budget' => Advertisement::calculatePrice($validated['sticker_area_type'],$validated['target_partner'],$validated['target_distance']),
                 'description' => $validated['description'] ?? null,
-                'status' => 'draft',
+                'status' => OrderStatus::DRAFT->value,
                 'draft_at' => Carbon::now(),
             ]);
-            ActivityLog::log($user->id, 'Membuat iklan baru dengan ID: ' . $advertisement->id, 'advertisement_create', $advertisement->toArray());
-            return redirect()->route('my-ads.index')->with('success', 'Iklan berhasil dibuat!');
+            ActivityLog::log($user->id, 'Membuat iklan baru dengan ID: ' . $advertisement->id, "store", "App\Models\Advertisement", $user->id, $advertisement->toArray());
+            return redirect()->route('my-ads.index')->with('success', "Campaign $advertisement->title berhasil dibuat. Tim kami akan melakukan verifikasi dan menghubungi Anda dalam waktu maksimal 2x24 jam untuk langkah selanjutnya.!");
+        }catch(\Illuminate\Validation\ValidationException $e) {
+            Log::error('Validation error creating advertisement: ' . json_encode($e->errors()));
+            return redirect()->back()->withErrors($e->errors())->withInput();
         }catch (\Exception $e) {
+            Log::error('Error creating advertisement: ' . $e->getMessage());
             return redirect()->back()->with('error', 'Terjadi kesalahan saat membuat iklan: ' . $e->getMessage())->withInput();
         }
     }
@@ -289,7 +311,7 @@ class AdvertisementController extends Controller
             $advertisement->status = 'cancel';
             $advertisement->cancel_at = Carbon::now();
             $advertisement->save();
-            ActivityLog::log(Auth::id(), 'Membatalkan iklan dengan ID: ' . $advertisement->id, 'advertisement_cancel', $advertisement->toArray());
+            ActivityLog::log(Auth::id(), 'Membatalkan iklan dengan ID: ' . $advertisement->id, 'cancel', "App\Models\Advertisement", Auth::id(), $advertisement->toArray());
             return redirect()->route('my-ads.index')->with('success', 'Iklan berhasil dibatalkan.');
         }catch (\Exception $e) {
             Log::error('Error canceling advertisement ID ' . $advertisement->id . ': ' . $e->getMessage());

@@ -171,6 +171,7 @@
             <label class="label">Tanggal Iklan Dimulai*</label>
             <input type="date" class="input @error('startdate') border-red-500 @enderror" 
                    name="startdate" value="{{ old('startdate') }}">
+            <span class="text-xs text-gray-500">Iklan hanya dapat dimulai minimal 2 minggu dari hari ini</span>
             @error('startdate')
                 <span class="text-red-500 text-sm">{{ $message }}</span>
             @enderror
@@ -181,6 +182,7 @@
             <label class="label">Tanggal Iklan Berakhir</label>
             <input type="date" class="input @error('enddate') border-red-500 @enderror" 
                    name="enddate" value="{{ old('enddate') }}" id="enddate">
+            <span class="text-xs text-gray-500">Opsional, jika tidak diisi maka iklan akan berjalan terus hingga mencapai target</span>
             @error('enddate')
                 <span class="text-red-500 text-sm">{{ $message }}</span>
             @enderror
