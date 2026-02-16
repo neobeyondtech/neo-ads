@@ -139,7 +139,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
             
             Route::prefix('customer_categories')
                 ->name('customer_categories.')
-                ->controller(\App\Http\Controllers\Admin\CustomerCategorieController::class)
+                ->controller(\App\Http\Controllers\Admin\CustomerCategoriesController::class)
                 ->group(function () {
                     Route::get('/', 'index')->name('index');
                     Route::get('/create', 'create')->name('create');

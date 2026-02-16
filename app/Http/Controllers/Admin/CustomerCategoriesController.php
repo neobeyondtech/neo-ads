@@ -3,13 +3,13 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\CustomerCategorie;
+use App\Models\CustomerCategory;
 use App\Models\User;
 use App\Traits\HasPermissions;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class CustomerCategorieController extends Controller
+class CustomerCategoriesController extends Controller
 {
     use HasPermissions;
 
@@ -21,7 +21,7 @@ class CustomerCategorieController extends Controller
             return redirect()->route('admin.dashboard')->with('error', 'Unauthorized');
         }
 
-        $customer_categorie = Customercategorie::orderBy('name')->paginate(15);
+        $customer_categorie = CustomerCategory::orderBy('name')->paginate(15);
 
         return view('admin.customer_categories.index', compact('customer_categorie'));
     }
@@ -49,12 +49,12 @@ class CustomerCategorieController extends Controller
             'name' => 'required|string|max:255',
         ]);
 
-        Customercategorie::create($validated);
+        CustomerCategory::create($validated);
 
         return redirect()->route('admin.customer_categories.index')->with('success', 'Customer created successfully');
     }
 
-    public function show(Customercategorie $customer_categorie)
+    public function show(CustomerCategory $customer_categorie)
     {
         $user = Auth::user();
 
@@ -65,7 +65,7 @@ class CustomerCategorieController extends Controller
         return view('admin.customer_categories.show', compact('customer_categorie'));
     }
 
-    public function edit(Customercategorie $customer_categorie)
+    public function edit(CustomerCategory $customer_categorie)
     {
         $user = Auth::user();
 
@@ -76,7 +76,7 @@ class CustomerCategorieController extends Controller
         return view('admin.customer_categories.edit', compact('customer_categorie'));
     }
 
-    public function update(Request $request, Customercategorie $customer_categorie)
+    public function update(Request $request, CustomerCategory $customer_categorie)
     {
         $user = Auth::user();
 
@@ -94,7 +94,7 @@ class CustomerCategorieController extends Controller
             ->with('success', 'Customer updated successfully');
     }
 
-    public function destroy(Customercategorie $customer_categorie)
+    public function destroy(CustomerCategory $customer_categorie)
     {
         $user = Auth::user();
 

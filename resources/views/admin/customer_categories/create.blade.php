@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="flex justify-between items-center mb-6">
-    <h1 class="text-2xl font-bold">Create Customer categorie</h1>
+    <h1 class="text-2xl font-bold">Create Customer Categories</h1>
 </div>
 
 @if($errors->any())
@@ -34,7 +34,7 @@
 
                 <div class="flex gap-3">
                     <button categorie="submit" class="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-lg">
-                        Create Customer categorie
+                        Create Customer Categories
                     </button>
                     <a href="{{ route('admin.customer_categories.index') }}" class="bg-gray-500 hover:bg-gray-600 text-white px-6 py-2 rounded-lg">
                         Cancel
