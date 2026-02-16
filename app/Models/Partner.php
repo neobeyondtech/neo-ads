@@ -21,6 +21,11 @@ class Partner extends Model
         'img_sim',
         'subdistrict_id',
         'address',
+        'email',
+        'province',
+        'city',
+        'district',
+        'village'
     ];
 
     protected $casts = [
@@ -28,7 +33,7 @@ class Partner extends Model
     ];
 
 
-    public function subdistrict()
+   /* public function subdistrict()
     {
         return $this->belongsTo(MasterSubdistrict::class);
     }
@@ -46,14 +51,30 @@ class Partner extends Model
     public function getProvinceAttribute()
     {
         return $this->city->province??null;
-    }
-
+    }*/
+ 
     /*
     |--------------------------------------------------------------------------
     | Accessors
     |--------------------------------------------------------------------------
     */
+    
+    public function district()
+    {
+        return $this->belongsTo(MasterDistrict::class, 'district');
+    }
 
+    public function city()
+    {
+        return $this->belongsTo(MasterCity::class, 'city');
+    }
+
+    public function province()
+    {
+        return $this->belongsTo(MasterProvince::class, 'province');
+    }
+    
+    
     public function getFullNameAttribute(): string
     {
         return trim("{$this->first_name} {$this->last_name}");

@@ -34,6 +34,8 @@
             <thead class="bg-gray-50 text-gray-700">
                 <tr>
                     <th class="px-4 py-3 text-left">Name</th>
+                    <th class="px-4 py-3 text-left">Email</th>
+                    <th class="px-4 py-3 text-left">Phone</th>
                     <th class="px-4 py-3 text-left">Status</th>
                     <th class="px-4 py-3 text-left">Vehicles</th>
                     <th class="px-4 py-3 text-left">Created</th>
@@ -43,7 +45,9 @@
             <tbody>
                 @forelse($partners as $partner)
                     <tr class="border-t hover:bg-gray-50">
-                        <td class="px-4 py-3 font-medium">{{ $partner->name }}</td>
+                        <td class="px-4 py-3 font-medium">{{ $partner->first_name }} {{ $partner->last_name }}</td>
+                        <td class="px-4 py-3">{{ $partner->email ?? '-' }}</td>
+                        <td class="px-4 py-3">{{ $partner->phone ?? '-' }}</td>
                         <td class="px-4 py-3">
                             <span class="px-2 py-1 rounded text-white text-xs
                                 @if($partner->status === 'active') bg-green-600
@@ -67,7 +71,7 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="5" class="px-4 py-8 text-center text-gray-500">No partners found</td>
+                        <td colspan="7" class="px-4 py-8 text-center text-gray-500">No partners found</td>
                     </tr>
                 @endforelse
             </tbody>

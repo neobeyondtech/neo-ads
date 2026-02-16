@@ -23,7 +23,7 @@ class TransactionController extends Controller
         }
 
         $status = $request->get('status', '');
-        $query = Transaction::with('advertisement');
+        $query = Transaction::with('advertisement','customer');
 
         if ($status && $status !== 'all') {
             $query->where('payment_status', $status);
@@ -56,11 +56,15 @@ class TransactionController extends Controller
 
         $validated = $request->validate([
             'advertisement_id' => 'nullable|exists:advertisements,id',
+            'customer_id' => 'required|exists:customers,id',
             'amount' => 'nullable|numeric',
             'payment_method' => 'nullable|string',
             'payment_reference' => 'nullable|string',
+            'payment_date' => 'nullable',
+            'payment_channel' => 'nullable',
+            'transaction_reference' => 'nullable',
             'payment_status' => 'required|string',
-            'notes' => 'nullable|string',
+            'payment_notes' => 'nullable|string',
         ]);
 
         Transaction::create($validated);
@@ -102,8 +106,16 @@ class TransactionController extends Controller
         }
 
         $validated = $request->validate([
-            'payment_status' => 'required|string',
+            'advertisement_id' => 'nullable|exists:advertisements,id',
+            'customer_id' => 'required|exists:customers,id',
+            'amount' => 'nullable|numeric',
             'payment_method' => 'nullable|string',
+            'payment_reference' => 'nullable|string',
+            'payment_date' => 'nullable',
+            'payment_channel' => 'nullable',
+            'transaction_reference' => 'nullable',
+            'payment_status' => 'required|string',
+            'payment_notes' => 'nullable|string',
         ]);
 
         $transaction->update($validated);

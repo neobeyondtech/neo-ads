@@ -22,7 +22,7 @@ class PartnerController extends Controller
         }
 
         $status = $request->get('status', '');
-        $query = Partner::query();
+        $query = Partner::with('district','city','province');
 
         if ($status && $status !== 'all') {
             $query->where('status', $status);
@@ -54,13 +54,31 @@ class PartnerController extends Controller
         }
 
         $validated = $request->validate([
-            'name' => 'required|string|max:255',
+            'first_name' => 'required|string|max:255',
+            'last_name' => 'required|string|max:255',
+            'birth_date' => 'nullable|date',
             'email' => 'nullable|email',
             'phone' => 'nullable|string',
             'address' => 'nullable|string',
             'status' => 'required|string',
-            'description' => 'nullable|string',
+            'province' => 'nullable|string',
+            'city' => 'nullable|string',
+            'district' => 'nullable|string',
+            'village' => 'nullable|string',
+            'no_ktp' => 'nullable|string',
+            'img_ktp' => 'nullable',
+            'img_sim' => 'nullable',
         ]);
+
+        if ($request->hasFile('img_ktp')) {
+            $path = $request->file('img_ktp')->store('partners/ktp', 'public');
+            $validated['img_ktp'] = $path;
+        }
+
+        if ($request->hasFile('img_sim')) {
+            $path = $request->file('img_sim')->store('partners/sim', 'public');
+            $validated['img_sim'] = $path;
+        }
 
         Partner::create($validated);
 
@@ -74,6 +92,8 @@ class PartnerController extends Controller
         if (!$user->role->canPerform('view', 'partners')) {
             return redirect()->route('admin.dashboard')->with('error', 'Unauthorized');
         }
+        
+//dd(\DB::getSchemaBuilder()->getColumnListing('partners'));
 
         return view('admin.partners.show', compact('partner'));
     }
@@ -100,10 +120,34 @@ class PartnerController extends Controller
         }
 
         $validated = $request->validate([
-            'name' => 'required|string|max:255',
+            'first_name' => 'required|string|max:255',
+            'last_name' => 'required|string|max:255',
+            'birth_date' => 'nullable|date',
+            'email' => 'nullable|email',
+            'phone' => 'nullable|string',
+            'address' => 'nullable|string',
             'status' => 'required|string',
-        ]);
+            'province' => 'nullable|string',
+            'city' => 'nullable|string',
+            'district' => 'nullable|string',
+            'village' => 'nullable|string',
+            'no_ktp' => 'nullable|string',
+            'img_ktp' => 'nullable',
+            'img_sim' => 'nullable',
+        ]); 
+        if ($request->hasFile('img_ktp')) {
+            if ($partner->img_ktp) {
+                Storage::disk('public')->delete($partner->img_ktp);
+            }
+            $data['img_ktp'] = $request->file('img_ktp')->store('partners/ktp', 'public');
+        }
 
+        if ($request->hasFile('img_sim')) {
+            if ($partner->img_sim) {
+                Storage::disk('public')->delete($partner->img_sim);
+            }
+            $data['img_sim'] = $request->file('img_sim')->store('partners/sim', 'public');
+        }
         $partner->update($validated);
 
         return redirect()->route('admin.partners.show', $partner)

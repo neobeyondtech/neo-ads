@@ -26,7 +26,7 @@ class AdvertisementController extends Controller
         }
 
         $status = $request->get('status', '');
-        $query = Advertisement::with('customer', 'location');
+        $query = Advertisement::with('customer', 'location' , 'city');
 
         if ($status && $status !== 'all') {
             $query->where('status', $status);
@@ -60,11 +60,15 @@ class AdvertisementController extends Controller
 
         $validated = $request->validate([
             'customer_id' => 'required|exists:customers,id',
+            'city_id' => 'required|exists:master_cities,id',
             'title' => 'required|string|max:255',
+            'goal_type' => 'required|string|max:255',
+            'target_distance' => 'required|numeric',
+            //'target_location' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'start_date' => 'nullable|date',
-            'end_date' => 'nullable|date',
-            'budget' => 'nullable|numeric',
+            'startdate' => 'nullable|date',
+            'enddate' => 'nullable|date',
+            'total_budget' => 'nullable|numeric',
             'status' => 'required|string',
         ]);
 

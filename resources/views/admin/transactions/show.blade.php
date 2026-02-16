@@ -29,27 +29,45 @@
                 </div>
                 <div>
                     <p class="text-gray-600">Advertisement</p>
-                    <p class="font-semibold">
-                        @if($transaction->advertisement)
-                            <a href="{{ route('admin.advertisements.show', $transaction->advertisement->id) }}" class="text-blue-500 hover:underline">
-                                {{ $transaction->advertisement->title }}
-                            </a>
-                        @else
-                            N/A
-                        @endif
-                    </p>
+                    <p class="font-semibold">{{ $transaction->ad?->title ?? 'N/A' }}</p>
+                </div>
+                <div>
+                    <p class="text-gray-600">Customer</p>
+                    <p class="font-semibold">{{ $transaction->customer?->name ?? 'N/A' }}</p>
                 </div>
                 <div>
                     <p class="text-gray-600">Amount</p>
-                    <p class="font-semibold">Rp {{ number_format($transaction->amount ?? 0, 0, ',', '.') }}</p>
+                    <p class="font-semibold">{{ number_format($transaction->amount, 2) }}</p>
+                </div>
+                <div>
+                    <p class="text-gray-600">Payment Status</p>
+                    <p class="font-semibold">
+                        <span class="px-2 py-1 rounded text-white text-xs
+                            @if($transaction->payment_status === 'paid') bg-green-600
+                            @elseif($transaction->payment_status === 'pending') bg-yellow-600
+                            @elseif($transaction->payment_status === 'failed') bg-red-600
+                            @else bg-gray-600
+                            @endif
+                        ">
+                            {{ ucfirst($transaction->payment_status) }}
+                        </span>
+                    </p>
                 </div>
                 <div>
                     <p class="text-gray-600">Payment Method</p>
                     <p class="font-semibold">{{ $transaction->payment_method ?? 'N/A' }}</p>
                 </div>
                 <div>
-                    <p class="text-gray-600">Payment Reference</p>
-                    <p class="font-semibold">{{ $transaction->payment_reference ?? '-' }}</p>
+                    <p class="text-gray-600">Payment Channel</p>
+                    <p class="font-semibold">{{ $transaction->payment_channel ?? 'N/A' }}</p>
+                </div>
+                <div>
+                    <p class="text-gray-600">Transaction Reference</p>
+                    <p class="font-semibold">{{ $transaction->transaction_reference ?? 'N/A' }}</p>
+                </div>
+                <div>
+                    <p class="text-gray-600">Payment Date</p>
+                    <p class="font-semibold">{{ $transaction->payment_date ? \Carbon\Carbon::parse($transaction->payment_date)->format('d M Y') : 'N/A' }}</p>
                 </div>
                 <div>
                     <p class="text-gray-600">Created At</p>
@@ -59,36 +77,25 @@
         </div>
 
         <div class="bg-white rounded-lg shadow p-6">
-            <h2 class="text-lg font-semibold mb-4 border-b pb-2">Notes</h2>
-            <p class="text-gray-700">{{ $transaction->notes ?? 'No additional notes' }}</p>
+            <h2 class="text-lg font-semibold mb-4 border-b pb-2">Payment Notes</h2>
+            <p class="text-gray-700 whitespace-pre-line">{{ $transaction->payment_notes ?? 'No notes provided' }}</p>
         </div>
     </div>
 
     <div class="lg:col-span-1">
         <div class="bg-white rounded-lg shadow p-6 sticky top-6">
-            <h2 class="text-lg font-semibold mb-4 border-b pb-2">Status</h2>
-            <div class="mb-4">
-                <span class="inline-block px-3 py-1 rounded-full text-sm font-semibold
-                    @if($transaction->payment_status === 'paid')
-                        bg-green-100 text-green-800
-                    @elseif($transaction->payment_status === 'pending')
-                        bg-yellow-100 text-yellow-800
-                    @elseif($transaction->payment_status === 'failed')
-                        bg-red-100 text-red-800
-                    @elseif($transaction->payment_status === 'cancelled')
-                        bg-gray-100 text-gray-800
-                    @else
-                        bg-blue-100 text-blue-800
-                    @endif">
-                    {{ ucfirst($transaction->payment_status ?? 'unknown') }}
-                </span>
-            </div>
-
+            <h2 class="text-lg font-semibold mb-4 border-b pb-2">Metadata</h2>
             <div class="space-y-3">
                 <div>
                     <p class="text-gray-600 text-sm">Updated At</p>
                     <p class="font-semibold">{{ $transaction->updated_at?->format('d M Y H:i') ?? 'N/A' }}</p>
                 </div>
+                @if($transaction->deleted_at)
+                <div>
+                    <p class="text-gray-600 text-sm">Deleted At</p>
+                    <p class="font-semibold text-red-600">{{ $transaction->deleted_at->format('d M Y H:i') }}</p>
+                </div>
+                @endif
                 <div class="border-t pt-3 mt-3">
                     <p class="text-gray-600 text-sm mb-2">Actions</p>
                     <div class="space-y-2">

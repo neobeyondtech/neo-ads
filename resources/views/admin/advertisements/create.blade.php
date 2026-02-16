@@ -36,6 +36,19 @@
                 </div>
 
                 <div class="mb-4">
+                    <label for="city_id" class="block text-gray-700 font-semibold mb-2">City</label>
+                    <select name="city_id" id="city_id" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                        <option value="">-- Select city --</option>
+                        @foreach(\App\Models\MasterCity::all() as $city)
+                            <option value="{{ $city->id }}">{{ $city->name }}</option>
+                        @endforeach
+                    </select>
+                    @error('city_id')
+                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                <div class="mb-4">
                     <label for="title" class="block text-gray-700 font-semibold mb-2">Title</label>
                     <input type="text" name="title" id="title" value="{{ old('title') }}" 
                            class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" required>
@@ -43,6 +56,35 @@
                         <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                     @enderror
                 </div>
+
+                <div class="mb-4">
+                    <label for="goal_type" class="block text-gray-700 font-semibold mb-2">Goals</label>
+                    <input type="text" name="goal_type" id="goal_type" value="{{ old('goal_type') }}" 
+                           class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                    @error('goal_type')
+                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                
+                <div class="mb-4">
+                    <label for="target_location" class="block text-gray-700 font-semibold mb-2">Target Lokasi</label>
+                    <input type="text" name="target_location" id="target_location" value="{{ old('target_location') }}" 
+                           class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                    @error('target_location')
+                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                <div class="mb-4">
+                    <label for="target_distance" class="block text-gray-700 font-semibold mb-2">Target KM</label>
+                    <input type="number" name="target_distance" id="target_distance" value="{{ old('target_distance') }}" 
+                           class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                    @error('target_distance')
+                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
+
 
                 <div class="mb-4">
                     <label for="description" class="block text-gray-700 font-semibold mb-2">Description</label>
@@ -55,18 +97,18 @@
 
                 <div class="grid grid-cols-2 gap-4 mb-4">
                     <div>
-                        <label for="start_date" class="block text-gray-700 font-semibold mb-2">Start Date</label>
-                        <input type="date" name="start_date" id="start_date" value="{{ old('start_date') }}" 
+                        <label for="startdate" class="block text-gray-700 font-semibold mb-2">Start Date</label>
+                        <input type="date" name="startdate" id="startdate" value="{{ old('startdate') }}" 
                                class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                        @error('start_date')
+                        @error('startdate')
                             <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                         @enderror
                     </div>
                     <div>
-                        <label for="end_date" class="block text-gray-700 font-semibold mb-2">End Date</label>
-                        <input type="date" name="end_date" id="end_date" value="{{ old('end_date') }}" 
+                        <label for="enddate" class="block text-gray-700 font-semibold mb-2">End Date</label>
+                        <input type="date" name="enddate" id="enddate" value="{{ old('enddate') }}" 
                                class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                        @error('end_date')
+                        @error('enddate')
                             <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                         @enderror
                     </div>
@@ -74,10 +116,10 @@
 
                 <div class="grid grid-cols-2 gap-4 mb-4">
                     <div>
-                        <label for="budget" class="block text-gray-700 font-semibold mb-2">Budget</label>
-                        <input type="number" name="budget" id="budget" value="{{ old('budget') }}" 
+                        <label for="total_budget" class="block text-gray-700 font-semibold mb-2">Budget</label>
+                        <input type="number" name="total_budget" id="total_budget" value="{{ old('total_budget') }}" 
                                class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                        @error('budget')
+                        @error('total_budget')
                             <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                         @enderror
                     </div>

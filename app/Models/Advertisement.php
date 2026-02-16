@@ -15,6 +15,7 @@ class Advertisement extends Model
 
     protected $fillable = [
         'customer_id',
+        'city_id',
         'title',
         'goal_type',
         'sticker_area_type',
@@ -56,6 +57,11 @@ class Advertisement extends Model
     public function location()
     {
         return $this->belongsTo(MasterCity::class, 'target_location_id');
+    }
+
+    public function city()
+    {
+        return $this->belongsTo(MasterCity::class, 'city_id');
     }
 
     public function transactions()

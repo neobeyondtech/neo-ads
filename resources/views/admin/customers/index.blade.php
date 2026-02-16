@@ -5,7 +5,7 @@
 
 @section('content')
 <div class="space-y-6">
-    {{-- Header --}}
+    {{-- Header --}} 
     <div class="flex justify-between items-center">
         <h2 class="text-2xl font-bold text-gray-800">All Customers</h2>
         @if(auth()->user()->role->canPerform('create', 'customers'))
@@ -29,6 +29,13 @@
             <thead class="bg-gray-50 text-gray-700">
                 <tr>
                     <th class="px-4 py-3 text-left">Name</th>
+                    <th class="px-4 py-3 text-left">Type</th>
+                    <th class="px-4 py-3 text-left">Category</th>
+                    <th class="px-4 py-3 text-left">NPWP</th>
+                    <th class="px-4 py-3 text-left">Province</th>
+                    <th class="px-4 py-3 text-left">District</th>
+                    <th class="px-4 py-3 text-left">Sub Distict</th>
+                    <th class="px-4 py-3 text-left">City</th>
                     <th class="px-4 py-3 text-left">Email</th>
                     <th class="px-4 py-3 text-left">Phone</th>
                     <th class="px-4 py-3 text-left">Created</th>
@@ -39,6 +46,13 @@
                 @forelse($customers as $customer)
                     <tr class="border-t hover:bg-gray-50">
                         <td class="px-4 py-3 font-medium">{{ $customer->name }}</td>
+                        <td class="px-4 py-3 font-medium">{{ $customer->type->name ?? 'N/A' }}</td>
+                        <td class="px-4 py-3 font-medium">{{ $customer->category->name ?? 'N/A' }}</td>
+                        <td class="px-4 py-3 font-medium">{{ $customer->province->name ?? 'N/A' }}</td>
+                        <td class="px-4 py-3 font-medium">{{ $customer->district->name ?? 'N/A' }}</td>
+                        <td class="px-4 py-3 font-medium">{{ $customer->subdistrict->name ?? 'N/A' }}</td>
+                        <td class="px-4 py-3 font-medium">{{ $customer->city->name ?? 'N/A' }}</td>
+                        <td class="px-4 py-3 font-medium">{{ $customer->NPWP_number ?? 'N/A' }}</td>
                         <td class="px-4 py-3">{{ $customer->user->email ?? 'N/A' }}</td>
                         <td class="px-4 py-3">{{ $customer->phone ?? 'N/A' }}</td>
                         <td class="px-4 py-3 text-gray-600">{{ $customer->created_at->format('M d, Y') }}</td>

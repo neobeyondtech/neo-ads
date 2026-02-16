@@ -22,8 +22,9 @@ class CustomerController extends Controller
         }
 
         $search = $request->get('search', '');
-        $query = Customer::with('users');
-
+        $query = Customer::with('users','type','category','subdistrict','district','city','province');
+        
+        
         if ($search) {
             $query->where('name', 'like', "%{$search}%")
                 ->orWhereHas('users', function ($q) use ($search) {
@@ -43,7 +44,7 @@ class CustomerController extends Controller
         if (!$user->role->canPerform('create', 'customers')) {
             return redirect()->route('admin.dashboard')->with('error', 'Unauthorized');
         }
-
+ 
         return view('admin.customers.create');
     }
 
@@ -60,6 +61,13 @@ class CustomerController extends Controller
             'email' => 'nullable|email',
             'phone' => 'nullable|string',
             'address' => 'nullable|string',
+            'NPWP_number' => 'nullable|string',
+            'customer_type_id' => 'nullable',
+            'customer_category_id' => 'nullable',
+            'master_location_id' => 'nullable',
+            'district_id' => 'nullable',
+            'city_id' => 'nullable',
+            'province_id' => 'nullable',
         ]);
 
         Customer::create($validated);
@@ -99,8 +107,16 @@ class CustomerController extends Controller
 
         $validated = $request->validate([
             'name' => 'required|string|max:255',
+            'email' => 'nullable|email',
             'phone' => 'nullable|string',
             'address' => 'nullable|string',
+            'NPWP_number' => 'nullable|string',
+            'customer_type_id' => 'nullable',
+            'customer_category_id' => 'nullable',
+            'master_location_id' => 'nullable',
+            'district_id' => 'nullable',
+            'city_id' => 'nullable',
+            'province_id' => 'nullable',
         ]);
 
         $customer->update($validated);

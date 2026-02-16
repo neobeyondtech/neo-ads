@@ -27,6 +27,22 @@
             </a>
         @endif
 
+        {{-- Customer types --}}
+        @if(Auth::user()->role->canPerform('view', 'customer_types'))
+            <a href="{{ route('admin.customer_types.index') }}" 
+               class="block px-4 py-2 rounded {{ request()->routeIs('admin.customer_types.*') ? 'bg-blue-700' : 'hover:bg-blue-800' }}">
+                Customer Types
+            </a>
+        @endif
+
+        {{-- Customer categories --}}
+        @if(Auth::user()->role->canPerform('view', 'customer_categories'))
+            <a href="{{ route('admin.customer_categories.index') }}" 
+               class="block px-4 py-2 rounded {{ request()->routeIs('admin.customer_categories.*') ? 'bg-blue-700' : 'hover:bg-blue-800' }}">
+                Customer Categories
+            </a>
+        @endif
+
         {{-- Partners --}}
         @if(Auth::user()->role->canPerform('view', 'partners'))
             <a href="{{ route('admin.partners.index') }}" 

@@ -40,6 +40,8 @@ enum Role: int
                 'advertisement' => ['view', 'create', 'edit', 'delete'],
                 'advertisements' => ['view', 'create', 'edit', 'delete'],
                 'customers' => ['view', 'create', 'edit', 'delete'],
+                'customer_types' => ['view', 'create', 'edit', 'delete'],
+                'customer_categories' => ['view', 'create', 'edit', 'delete'],
                 'partners' => ['view', 'create', 'edit', 'delete'],
                 'transactions' => ['view', 'create', 'edit', 'delete'],
                 'users' => ['view', 'create', 'edit', 'delete'],
@@ -50,6 +52,8 @@ enum Role: int
             Role::ADMIN => [
                 'advertisements' => ['view', 'create', 'edit', 'delete'],
                 'customers' => ['view', 'create', 'edit'],
+                'customer_types' => ['view', 'create', 'edit', 'delete'],
+                'customer_categories' => ['view', 'create', 'edit', 'delete'],
                 'partners' => ['view', 'create', 'edit'],
                 'transactions' => ['view', 'create', 'edit'],
                 'users' => ['view'],

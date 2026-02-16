@@ -5,7 +5,7 @@
 
 @section('content')
 <div class="space-y-6">
-    {{-- Header --}}
+    {{-- Header --}} 
     <div class="flex justify-between items-center">
         <h2 class="text-2xl font-bold text-gray-800">{{ $customer->name }}</h2>
         <div class="flex gap-2">
@@ -26,8 +26,36 @@
                 <p class="font-medium">{{ $customer->name }}</p>
             </div>
             <div>
+                <p class="text-sm text-gray-600">Type</p>
+                <p class="font-medium">{{ $customer->type->name ?? 'N/A' }}</p>
+            </div>
+            <div>
+                <p class="text-sm text-gray-600">Category</p>
+                <p class="font-medium">{{ $customer->category->name ?? 'N/A' }}</p>
+            </div>
+            <div>
+                <p class="text-sm text-gray-600">NPWP</p>
+                <p class="font-medium">{{ $customer->NPWP_number ?? 'N/A' }}</p>
+            </div>
+            <div>
+                <p class="text-sm text-gray-600">Province</p>
+                <p class="font-medium">{{ $customer->province->name ?? 'N/A' }}</p>
+            </div>
+            <div>
+                <p class="text-sm text-gray-600">District</p>
+                <p class="font-medium">{{ $customer->district->name ?? 'N/A' }}</p>
+            </div>
+            <div>
+                <p class="text-sm text-gray-600">Sub District</p>
+                <p class="font-medium">{{ $customer->subdistrict->name ?? 'N/A' }}</p>
+            </div>
+            <div>
+                <p class="text-sm text-gray-600">City</p>
+                <p class="font-medium">{{ $customer->city->name ?? 'N/A' }}</p>
+            </div>
+            <div>
                 <p class="text-sm text-gray-600">Email</p>
-                <p class="font-medium">{{ $customer->user->email ?? 'N/A' }}</p>
+                <p class="font-medium">{{ $customer->email ?? 'N/A' }}</p>
             </div>
             <div>
                 <p class="text-sm text-gray-600">Phone</p>

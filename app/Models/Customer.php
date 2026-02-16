@@ -18,6 +18,11 @@ class Customer extends Model
         'NPWP_number',
         'master_location_id',
         'address',
+        'email',
+        'phone',
+        'district_id',
+        'city_id',
+        'province_id',
     ];
 
     // Relationships (optional)
@@ -31,19 +36,19 @@ class Customer extends Model
         return $this->belongsTo(MasterSubdistrict::class, 'master_location_id');
     }
 
-    public function getDistrictAttribute()
+    public function district()
     {
-        return $this->subdistrict->district??null;
+        return $this->belongsTo(MasterDistrict::class, 'district_id');
     }
 
-    public function getCityAttribute()
+    public function city()
     {
-        return $this->district->city??null;
+        return $this->belongsTo(MasterCity::class, 'city_id');
     }
 
-    public function getProvinceAttribute()
+    public function province()
     {
-        return $this->city->province??null;
+        return $this->belongsTo(MasterProvince::class, 'province_id');
     }
 
     public function category()

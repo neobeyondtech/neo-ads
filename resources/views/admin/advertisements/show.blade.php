@@ -14,7 +14,7 @@
             @endif
             <a href="{{ route('admin.advertisements.index') }}" class="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700">Back</a>
         </div>
-    </div>
+    </div> 
 
     <div class="grid grid-cols-2 gap-6">
         {{-- Details Card --}}
@@ -30,6 +30,14 @@
             <div>
                 <p class="text-sm text-gray-600">Goal Type</p>
                 <p class="font-medium">{{ $advertisement->goal_type_label }}</p>
+            </div>
+            <div>
+                <p class="text-sm text-gray-600">Target Locations</p>
+                <p class="font-medium">{{ $advertisement->target_location_id ?? 'N/A' }}</p>
+            </div>
+            <div>
+                <p class="text-sm text-gray-600">Target Distance</p>
+                <p class="font-medium">{{ $advertisement->target_distance  }}</p>
             </div>
             <div>
                 <p class="text-sm text-gray-600">Total Budget</p>

@@ -23,47 +23,103 @@
                 @csrf
                 @method('PUT')
 
-                <div class="mb-4">
-                    <label for="payment_status" class="block text-gray-700 font-semibold mb-2">Payment Status</label>
-                    <select name="payment_status" id="payment_status" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                        <option value="pending" @if($transaction->payment_status === 'pending') selected @endif>Pending</option>
-                        <option value="paid" @if($transaction->payment_status === 'paid') selected @endif>Paid</option>
-                        <option value="failed" @if($transaction->payment_status === 'failed') selected @endif>Failed</option>
-                        <option value="cancelled" @if($transaction->payment_status === 'cancelled') selected @endif>Cancelled</option>
-                    </select>
-                    @error('payment_status')
-                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                    @enderror
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="mb-4">
+                        <label for="advertisement_id" class="block text-gray-700 font-semibold mb-2">Advertisement *</label>
+                        <select name="advertisement_id" id="advertisement_id" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                            <option value="">-- Select Advertisement --</option>
+                            @foreach(\App\Models\Advertisement::all() as $ad)
+                                <option value="{{ $ad->id }}" {{ old('ad_id', $transaction->advertisement_id) == $ad->id ? 'selected' : '' }}>{{ $ad->title }}</option>
+                            @endforeach
+                        </select>
+                        @error('advertisement_id')
+                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="customer_id" class="block text-gray-700 font-semibold mb-2">Customer *</label>
+                        <select name="customer_id" id="customer_id" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                            <option value="">-- Select Customer --</option>
+                            @foreach(\App\Models\Customer::all() as $customer)
+                                <option value="{{ $customer->id }}" {{ old('customer_id', $transaction->customer_id) == $customer->id ? 'selected' : '' }}>{{ $customer->name }}</option>
+                            @endforeach
+                        </select>
+                        @error('customer_id')
+                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="mb-4">
+                        <label for="amount" class="block text-gray-700 font-semibold mb-2">Amount *</label>
+                        <input type="number" name="amount" id="amount" value="{{ old('amount', $transaction->amount) }}" 
+                               step="0.01" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                        @error('amount')
+                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="payment_method" class="block text-gray-700 font-semibold mb-2">Payment Method</label>
+                        <input type="text" name="payment_method" id="payment_method" value="{{ old('payment_method', $transaction->payment_method) }}" 
+                               class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        @error('payment_method')
+                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="mb-4">
+                        <label for="payment_channel" class="block text-gray-700 font-semibold mb-2">Payment Channel</label>
+                        <input type="text" name="payment_channel" id="payment_channel" value="{{ old('payment_channel', $transaction->payment_channel) }}" 
+                               class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        @error('payment_channel')
+                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="transaction_reference" class="block text-gray-700 font-semibold mb-2">Transaction Reference</label>
+                        <input type="text" name="transaction_reference" id="transaction_reference" value="{{ old('transaction_reference', $transaction->transaction_reference) }}" 
+                               class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        @error('transaction_reference')
+                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="mb-4">
+                        <label for="payment_date" class="block text-gray-700 font-semibold mb-2">Payment Date</label>
+                        <input type="date" name="payment_date" id="payment_date" value="{{ old('payment_date', $transaction->payment_date ? $transaction->payment_date->format('Y-m-d') : '') }}" 
+                               class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        @error('payment_date')
+                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="payment_status" class="block text-gray-700 font-semibold mb-2">Payment Status *</label>
+                        <select name="payment_status" id="payment_status" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                            <option value="pending" {{ old('payment_status', $transaction->payment_status) == 'pending' ? 'selected' : '' }}>Pending</option>
+                            <option value="paid" {{ old('payment_status', $transaction->payment_status) == 'paid' ? 'selected' : '' }}>Paid</option>
+                            <option value="failed" {{ old('payment_status', $transaction->payment_status) == 'failed' ? 'selected' : '' }}>Failed</option>
+                            <option value="cancelled" {{ old('payment_status', $transaction->payment_status) == 'cancelled' ? 'selected' : '' }}>Cancelled</option>
+                        </select>
+                        @error('payment_status')
+                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
                 </div>
 
                 <div class="mb-4">
-                    <label for="payment_method" class="block text-gray-700 font-semibold mb-2">Payment Method</label>
-                    <select name="payment_method" id="payment_method" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                        @foreach($methods as $method)
-                            <option value="{{ $method['value'] }}" @if($transaction->payment_method === $method['value']) selected @endif>
-                                {{ $method['label'] }}
-                            </option>
-                        @endforeach
-                    </select>
-                    @error('payment_method')
-                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                    @enderror
-                </div>
-
-                <div class="mb-4">
-                    <label for="payment_reference" class="block text-gray-700 font-semibold mb-2">Payment Reference</label>
-                    <input type="text" name="payment_reference" id="payment_reference" value="{{ old('payment_reference', $transaction->payment_reference) }}" 
-                           class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                    @error('payment_reference')
-                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                    @enderror
-                </div>
-
-                <div class="mb-4">
-                    <label for="notes" class="block text-gray-700 font-semibold mb-2">Notes</label>
-                    <textarea name="notes" id="notes" rows="4" 
-                              class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">{{ old('notes', $transaction->notes) }}</textarea>
-                    @error('notes')
+                    <label for="payment_notes" class="block text-gray-700 font-semibold mb-2">Payment Notes</label>
+                    <textarea name="payment_notes" id="payment_notes" rows="4" 
+                              class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">{{ old('payment_notes', $transaction->payment_notes) }}</textarea>
+                    @error('payment_notes')
                         <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                     @enderror
                 </div>
@@ -82,29 +138,19 @@
 
     <div class="lg:col-span-1">
         <div class="bg-white rounded-lg shadow p-6">
-            <h2 class="text-lg font-semibold mb-4 border-b pb-2">Transaction Details</h2>
+            <h2 class="text-lg font-semibold mb-4 border-b pb-2">Transaction Metadata</h2>
             <div class="space-y-3">
                 <div>
                     <p class="text-gray-600 text-sm">ID</p>
                     <p class="font-semibold">{{ $transaction->id }}</p>
                 </div>
                 <div>
-                    <p class="text-gray-600 text-sm">Amount</p>
-                    <p class="font-semibold">Rp {{ number_format($transaction->amount ?? 0, 0, ',', '.') }}</p>
-                </div>
-                <div>
-                    <p class="text-gray-600 text-sm">Advertisement</p>
-                    <p class="font-semibold">
-                        @if($transaction->advertisement)
-                            {{ $transaction->advertisement->title }}
-                        @else
-                            N/A
-                        @endif
-                    </p>
-                </div>
-                <div class="border-t pt-3 mt-3">
                     <p class="text-gray-600 text-sm">Created At</p>
                     <p class="font-semibold">{{ $transaction->created_at?->format('d M Y H:i') ?? 'N/A' }}</p>
+                </div>
+                <div>
+                    <p class="text-gray-600 text-sm">Updated At</p>
+                    <p class="font-semibold">{{ $transaction->updated_at?->format('d M Y H:i') ?? 'N/A' }}</p>
                 </div>
             </div>
         </div>

@@ -10,7 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class PayoutController extends Controller
-{
+{ 
     use HasPermissions;
 
     public function index(Request $request)
@@ -22,7 +22,7 @@ class PayoutController extends Controller
         }
 
         $status = $request->get('status', '');
-        $query = Payout::with('partner');
+        $query = Payout::with('partner','advertisement');
 
         if ($status && $status !== 'all') {
             $query->where('status', $status);
@@ -56,9 +56,14 @@ class PayoutController extends Controller
 
         $validated = $request->validate([
             'partner_id' => 'required|exists:partners,id',
+            'advertisement_id' => 'required|exists:advertisements,id',
             'amount' => 'required|numeric|min:0',
-            'status' => 'required|string',
-            'notes' => 'nullable|string',
+            'payment_status' => 'required|string',
+            'payment_method' => 'required|string',
+            'payment_date' => 'required',
+            'payment_channel' => 'nullable',
+            'transaction_reference' => 'nullable',
+            'payment_notes' => 'nullable|string',
         ]);
 
         Payout::create($validated);
@@ -98,9 +103,15 @@ class PayoutController extends Controller
         }
 
         $validated = $request->validate([
+            'partner_id' => 'required|exists:partners,id',
+            'advertisement_id' => 'required|exists:advertisements,id',
             'amount' => 'required|numeric|min:0',
-            'status' => 'required|string',
-            'notes' => 'nullable|string',
+            'payment_status' => 'required|string',
+            'payment_method' => 'required|string',
+            'payment_date' => 'required',
+            'payment_channel' => 'nullable',
+            'transaction_reference' => 'nullable',
+            'payment_notes' => 'nullable|string',
         ]);
 
         $payout->update($validated);

@@ -122,6 +122,34 @@ Route::middleware(['auth', 'verified'])->group(function () {
                     Route::delete('/{customer}', 'destroy')->name('destroy');
                 });
 
+            
+            Route::prefix('customer_types')
+                ->name('customer_types.')
+                ->controller(\App\Http\Controllers\Admin\CustomerTypeController::class)
+                ->group(function () {
+                    Route::get('/', 'index')->name('index');
+                    Route::get('/create', 'create')->name('create');
+                    Route::post('/', 'store')->name('store');
+                    Route::get('/{customer_type}', 'show')->name('show');
+                    Route::get('/{customer_type}/edit', 'edit')->name('edit');
+                    Route::put('/{customer_type}', 'update')->name('update');
+                    Route::delete('/{customer_type}', 'destroy')->name('destroy');
+                });
+
+            
+            Route::prefix('customer_categories')
+                ->name('customer_categories.')
+                ->controller(\App\Http\Controllers\Admin\CustomerCategorieController::class)
+                ->group(function () {
+                    Route::get('/', 'index')->name('index');
+                    Route::get('/create', 'create')->name('create');
+                    Route::post('/', 'store')->name('store');
+                    Route::get('/{customer_categorie}', 'show')->name('show');
+                    Route::get('/{customer_categorie}/edit', 'edit')->name('edit');
+                    Route::put('/{customer_categorie}', 'update')->name('update');
+                    Route::delete('/{customer_categorie}', 'destroy')->name('destroy');
+                });
+
             // Partners
             Route::prefix('partners')
                 ->name('partners.')

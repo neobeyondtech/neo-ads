@@ -22,7 +22,7 @@ class EnrollmentController extends Controller
         }
 
         $status = $request->get('status', '');
-        $query = Enrollment::with('customer');
+        $query = Enrollment::with('partner','advertisement');
 
         if ($status && $status !== 'all') {
             $query->where('status', $status);
@@ -55,9 +55,14 @@ class EnrollmentController extends Controller
         }
 
         $validated = $request->validate([
-            'customer_id' => 'required|exists:customers,id',
-            'goal' => 'nullable|string',
+            'partner_id' => 'required|exists:partners,id',
+            'advertisement_id' => 'nullable|exists:advertisements,id',
             'status' => 'required|string',
+            'remarks' => 'nullable',
+            'rate' => 'nullable',
+            'achievement' => 'nullable',
+            'start_date' => 'nullable',
+            'end_date' => 'nullable',
         ]);
 
         Enrollment::create($validated);
@@ -97,8 +102,14 @@ class EnrollmentController extends Controller
         }
 
         $validated = $request->validate([
-            'goal' => 'nullable|string',
+            'partner_id' => 'required|exists:partners,id',
+            'advertisement_id' => 'nullable|exists:advertisements,id',
             'status' => 'required|string',
+            'remarks' => 'nullable',
+            'rate' => 'nullable',
+            'achievement' => 'nullable',
+            'start_date' => 'nullable',
+            'end_date' => 'nullable',
         ]);
 
         $enrollment->update($validated);
