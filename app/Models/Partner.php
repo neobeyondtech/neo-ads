@@ -19,7 +19,7 @@ class Partner extends Model
         'img_ktp',
         'no_sim',
         'img_sim',
-        'subdistrict_id',
+        'subdistrict',
         'address',
         'email',
         'province',
@@ -29,7 +29,11 @@ class Partner extends Model
     ];
 
     protected $casts = [
-        'birth_date' => 'date',
+        'birth_date'  => 'date',
+        'province'    => 'integer',
+        'city'        => 'integer',
+        'district'    => 'integer',
+        'subdistrict' => 'integer',
     ];
 
 
@@ -62,6 +66,10 @@ class Partner extends Model
     public function district()
     {
         return $this->belongsTo(MasterDistrict::class, 'district');
+    }
+    public function subdistrict()
+    {
+        return $this->belongsTo(MasterSubdistrict::class, 'subdistrict');
     }
 
     public function city()

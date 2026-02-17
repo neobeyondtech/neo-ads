@@ -273,14 +273,21 @@
             Neo Beyond Tech tidak bertanggung jawab atas kerusakan fisik kendaraan Partner atau 
             insiden lalu lintas selama kampanye berjalan, kecuali ditentukan lain dalam perjanjian khusus.
         </p>
-
+        <br>
         <hr>
 
         <h3>7. KONTAK DUKUNGAN BISNIS</h3>
-        <p>
-            Call Center / WhatsApp: <strong>0878 1907 3201</strong><br>
-            Email: <strong>contact@neobeyondtech.com</strong>
-        </p>
+<p>
+    Call Center / WhatsApp: 
+    <a style="color: #187bcd; text-decoration: none; font-weight: bold;">
+        0878 1907 3201
+    </a><br>
+    
+    Email: 
+    <a style="color: #187bcd; text-decoration: none; font-weight: bold;">
+        contact@neobeyondtech.com
+    </a>
+</p>
 
         <p style="margin-top: 20px; font-size: 0.85rem; color: #666;">
             <em>Terakhir diperbarui: {{ date('d F Y') }}</em>

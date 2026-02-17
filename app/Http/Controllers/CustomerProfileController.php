@@ -36,7 +36,7 @@ class CustomerProfileController extends Controller
                 'subdistrict_id' => $customer->subdistrict->id ?? null,
                 'subdistrict_name' => $customer->subdistrict->name ?? null,
             ];
-        }
+        }  
         
         $options = [
             'customer_type' => CustomerType::get(),

@@ -66,8 +66,8 @@
                     <p class="font-semibold">{{ $partner->district()->first()->name ?? 'N/A' }}</p>
                 </div>
                 <div>
-                    <p class="text-gray-600">Village</p>
-                     <p class="font-semibold">{{ $partner->village ?? 'N/A' }}</p>
+                    <p class="text-gray-600">Subdistrict</p>
+                     <p class="font-semibold">{{ $partner->subdistrict()->first()->name ?? 'N/A' }}</p>
                 </div>
                 <div class="col-span-2">
                     <p class="text-gray-600">Full Address</p>

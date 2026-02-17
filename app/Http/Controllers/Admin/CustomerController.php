@@ -34,6 +34,7 @@ class CustomerController extends Controller
 
         $customers = $query->orderBy('created_at', 'desc')->paginate(15);
 
+
         return view('admin.customers.index', compact('customers', 'search'));
     }
 
@@ -64,7 +65,7 @@ class CustomerController extends Controller
             'NPWP_number' => 'nullable|string',
             'customer_type_id' => 'nullable',
             'customer_category_id' => 'nullable',
-            'master_location_id' => 'nullable',
+            'subdistrict_id' => 'nullable',
             'district_id' => 'nullable',
             'city_id' => 'nullable',
             'province_id' => 'nullable',
@@ -86,15 +87,29 @@ class CustomerController extends Controller
         return view('admin.customers.show', compact('customer'));
     }
 
-    public function edit(Customer $customer)
+   public function edit(Customer $customer)
     {
         $user = Auth::user();
-
         if (!$user->role->canPerform('edit', 'customers')) {
             return redirect()->route('admin.dashboard')->with('error', 'Unauthorized');
         }
 
-        return view('admin.customers.edit', compact('customer'));
+        // Muat relasi lokasi
+        $customer->load('province', 'city', 'district', 'subdistrict');
+
+        // Siapkan data lokasi untuk dropdown
+        $locationData = [
+            'province_id'      => $customer->province->id ?? null,
+            'province_name'    => $customer->province->name ?? null,
+            'city_id'          => $customer->city->id ?? null,
+            'city_name'        => $customer->city->name ?? null,
+            'district_id'      => $customer->district->id ?? null,
+            'district_name'    => $customer->district->name ?? null,
+            'subdistrict_id'   => $customer->subdistrict->id ?? null,
+            'subdistrict_name' => $customer->subdistrict->name ?? null,
+        ];
+
+        return view('admin.customers.edit', compact('customer', 'locationData'));
     }
 
     public function update(Request $request, Customer $customer)
@@ -113,7 +128,7 @@ class CustomerController extends Controller
             'NPWP_number' => 'nullable|string',
             'customer_type_id' => 'nullable',
             'customer_category_id' => 'nullable',
-            'master_location_id' => 'nullable',
+            'subdistrict_id' => 'nullable',
             'district_id' => 'nullable',
             'city_id' => 'nullable',
             'province_id' => 'nullable',

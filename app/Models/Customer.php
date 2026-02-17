@@ -16,7 +16,7 @@ class Customer extends Model
         'customer_category_id',
         'description',
         'NPWP_number',
-        'master_location_id',
+        'subdistrict_id',
         'address',
         'email',
         'phone',
@@ -33,7 +33,7 @@ class Customer extends Model
 
     public function subdistrict()
     {
-        return $this->belongsTo(MasterSubdistrict::class, 'master_location_id');
+        return $this->belongsTo(MasterSubdistrict::class, 'subdistrict_id');
     }
 
     public function district()

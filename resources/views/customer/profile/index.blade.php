@@ -241,7 +241,7 @@
         </section>
     </form>
 </div>
-
+ 
 <script>
 // Initialize Select2 for location dropdowns with API support
 document.addEventListener('DOMContentLoaded', function() {

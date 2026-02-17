@@ -22,7 +22,7 @@ class PartnerController extends Controller
         }
 
         $status = $request->get('status', '');
-        $query = Partner::with('district','city','province');
+        $query = Partner::with('district','city','province','subdistrict');
 
         if ($status && $status !== 'all') {
             $query->where('status', $status);
@@ -64,7 +64,7 @@ class PartnerController extends Controller
             'province' => 'nullable|string',
             'city' => 'nullable|string',
             'district' => 'nullable|string',
-            'village' => 'nullable|string',
+            'subdistrict' => 'nullable',
             'no_ktp' => 'nullable|string',
             'img_ktp' => 'nullable',
             'img_sim' => 'nullable',
@@ -98,17 +98,31 @@ class PartnerController extends Controller
         return view('admin.partners.show', compact('partner'));
     }
 
-    public function edit(Partner $partner)
+    
+     public function edit(Partner $partner)
     {
         $user = Auth::user();
-
         if (!$user->role->canPerform('edit', 'partners')) {
             return redirect()->route('admin.dashboard')->with('error', 'Unauthorized');
         }
 
-        $statuses = PartnerStatus::options();
+        $statuses = PartnerStatus::options(); 
 
-        return view('admin.partners.edit', compact('partner', 'statuses'));
+        $partner->load('province', 'city', 'district', 'subdistrict');
+
+       $locationData = [
+            'province_id'      => $partner->province,
+            'province_name'    => $partner->province()->first()->name,
+            'city_id'          => $partner->city,
+            'city_name'    => $partner->city()->first()->name,
+            'district_id'      => $partner->district,
+            'district_name'    => $partner->district()->first()->name,
+            'subdistrict_id'   => $partner->subdistrict,
+            'subdisrict_name'    => $partner->subdistrict()->first()->name,
+        ];
+        //dd($locationData);
+            
+        return view('admin.partners.edit', compact('partner', 'statuses', 'locationData'));
     }
 
     public function update(Request $request, Partner $partner)
@@ -127,10 +141,10 @@ class PartnerController extends Controller
             'phone' => 'nullable|string',
             'address' => 'nullable|string',
             'status' => 'required|string',
-            'province' => 'nullable|string',
-            'city' => 'nullable|string',
-            'district' => 'nullable|string',
-            'village' => 'nullable|string',
+            'province' => 'nullable',
+            'city' => 'nullable',
+            'district' => 'nullable',
+            'subdistrict' => 'nullable',
             'no_ktp' => 'nullable|string',
             'img_ktp' => 'nullable',
             'img_sim' => 'nullable',

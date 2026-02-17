@@ -1,6 +1,14 @@
 @extends('admin.layout')
 
 @section('content')
+<style>
+    .select2-selection--single {
+        height: 45px !important;
+    }
+    .select2-selection__rendered {
+        line-height: 45px !important;
+    }
+</style>
 <div class="flex justify-between items-center mb-6">
     <h1 class="text-2xl font-bold">Create Partner</h1>
 </div>
@@ -85,11 +93,8 @@
                 <div class="grid grid-cols-2 gap-4">
                     <div class="mb-4">
                         <label for="province" class="block text-gray-700 font-semibold mb-2">Province</label>
-                        <select name="province" id="province" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                        <select name="province" id="province" class="w-full border border-gray-300 rounded px-3 py-2" required>
                             <option value="">-- Select Province --</option>
-                            @foreach(\App\Models\MasterProvince::all() as $p)
-                                <option value="{{ $p->id }}">{{ $p->name }}</option>
-                            @endforeach
                         </select>
                         @error('province') 
                             <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
@@ -98,11 +103,8 @@
 
                     <div class="mb-4">
                         <label for="city" class="block text-gray-700 font-semibold mb-2">City</label>
-                        <select name="city" id="city" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                        <select name="city" id="city" class="w-full border border-gray-300 rounded px-3 py-2" disabled required>
                             <option value="">-- Select City --</option>
-                            @foreach(\App\Models\Mastercity::all() as $p)
-                                <option value="{{ $p->id }}">{{ $p->name }}</option>
-                            @endforeach
                         </select>
                         @error('city')
                             <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
@@ -113,30 +115,23 @@
                 <div class="grid grid-cols-2 gap-4">
                     <div class="mb-4">
                         <label for="district" class="block text-gray-700 font-semibold mb-2">District</label>
-                        <select name="district" id="district" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                        <select name="district" id="district" class="w-full border border-gray-300 rounded px-3 py-2" disabled required>
                             <option value="">-- Select District --</option>
-                            @foreach(\App\Models\MasterDistrict::all() as $district)
-                                <option value="{{ $district->id }}">{{ $district->name }}</option>
-                            @endforeach
                         </select>
                         @error('district')
                             <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                         @enderror
                     </div>
 
-
-                <div class="mb-4">
-                    <label for="master_location_id" class="block text-gray-700 font-semibold mb-2">Sub District</label>
-                    <select name="master_location_id" id="master_location_id" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" required>
-                        <option value="">-- Select Sub District --</option>
-                        @foreach(\App\Models\MasterSubdistrict::limit(40000)->get() as $subdistict)
-                            <option value="{{ $subdistict->id }}">{{ $subdistict->name }}</option>
-                        @endforeach
-                    </select>
-                    @error('master_location_id')
-                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                    @enderror
-                </div>
+                    <div class="mb-4">
+                        <label for="subdistrict" class="block text-gray-700 font-semibold mb-2">Sub District</label>
+                        <select name="subdistrict" id="subdistrict" class="w-full border border-gray-300 rounded px-3 py-2" disabled required>
+                            <option value="">-- Select Sub District --</option>
+                        </select>
+                        @error('subdistrict')
+                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
                 </div>
 
                 <div class="mb-4">
@@ -206,4 +201,168 @@
         </div>
     </div>
 </div>
+
+{{-- Select2 CSS dan JS --}}
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const provinceSelect = $('#province');
+    const citySelect = $('#city');
+    const districtSelect = $('#district');
+    const subdistrictSelect = $('#subdistrict');
+
+    // Initialize Province Select2
+    provinceSelect.select2({
+        placeholder: 'Cari Provinsi...',
+        allowClear: true,
+        dropdownParent: $('body'),
+        ajax: {
+            url: '/api/locations/provinces',
+            dataType: 'json',
+            delay: 250,
+            processResults: function(data) {
+                return {
+                    results: data.map(function(item) {
+                        return { id: item.id, text: item.name };
+                    })
+                };
+            }
+        },
+        minimumInputLength: 0
+    });
+
+    // Load all provinces on focus
+    provinceSelect.on('select2:opening', function() {
+        if (provinceSelect.data('select2').$dropdown.find('.select2-results__option').length === 0) {
+            provinceSelect.select2('open');
+        }
+    });
+
+    // Initialize City Select2
+    citySelect.select2({
+        placeholder: 'Cari Kota...',
+        allowClear: true,
+        dropdownParent: $('body'),
+        ajax: {
+            url: '/api/locations/cities',
+            dataType: 'json',
+            delay: 250,
+            data: function(params) {
+                return {
+                    q: params.term,
+                    province_id: provinceSelect.val()
+                };
+            },
+            processResults: function(data) {
+                return {
+                    results: data.map(function(item) {
+                        return { id: item.id, text: item.name };
+                    })
+                };
+            }
+        },
+        minimumInputLength: 0
+    });
+
+    // Initialize District Select2
+    districtSelect.select2({
+        placeholder: 'Cari Kecamatan...',
+        allowClear: true,
+        dropdownParent: $('body'),
+        ajax: {
+            url: '/api/locations/districts',
+            dataType: 'json',
+            delay: 250,
+            data: function(params) {
+                return {
+                    q: params.term,
+                    city_id: citySelect.val()
+                };
+            },
+            processResults: function(data) {
+                return {
+                    results: data.map(function(item) {
+                        return { id: item.id, text: item.name };
+                    })
+                };
+            }
+        },
+        minimumInputLength: 0
+    });
+
+    // Initialize Subdistrict Select2
+    subdistrictSelect.select2({
+        placeholder: 'Cari Kelurahan...',
+        allowClear: true,
+        dropdownParent: $('body'),
+        ajax: {
+            url: '/api/locations/subdistricts',
+            dataType: 'json',
+            delay: 250,
+            data: function(params) {
+                return {
+                    q: params.term,
+                    district_id: districtSelect.val()
+                };
+            },
+            processResults: function(data) {
+                return {
+                    results: data.map(function(item) {
+                        return { id: item.id, text: item.name };
+                    })
+                };
+            }
+        },
+        minimumInputLength: 0
+    });
+
+    // Handle Province change
+    provinceSelect.on('change', function() {
+        const provinceId = $(this).val();
+        citySelect.val(null).trigger('change');
+        districtSelect.val(null).trigger('change');
+        subdistrictSelect.val(null).trigger('change');
+
+        if (provinceId) {
+            citySelect.prop('disabled', false);
+            districtSelect.prop('disabled', true);
+            subdistrictSelect.prop('disabled', true);
+        } else {
+            citySelect.prop('disabled', true);
+            districtSelect.prop('disabled', true);
+            subdistrictSelect.prop('disabled', true);
+        }
+    });
+
+    // Handle City change
+    citySelect.on('change', function() {
+        const cityId = $(this).val();
+        districtSelect.val(null).trigger('change');
+        subdistrictSelect.val(null).trigger('change');
+
+        if (cityId) {
+            districtSelect.prop('disabled', false);
+            subdistrictSelect.prop('disabled', true);
+        } else {
+            districtSelect.prop('disabled', true);
+            subdistrictSelect.prop('disabled', true);
+        }
+    });
+
+    // Handle District change
+    districtSelect.on('change', function() {
+        const districtId = $(this).val();
+        subdistrictSelect.val(null).trigger('change');
+
+        if (districtId) {
+            subdistrictSelect.prop('disabled', false);
+        } else {
+            subdistrictSelect.prop('disabled', true);
+        }
+    });
+});
+</script>
 @endsection
