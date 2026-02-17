@@ -7,9 +7,9 @@
 <div class="space-y-6">
     {{-- Header --}} 
     <div class="flex justify-between items-center">
-        <h2 class="text-2xl font-bold text-gray-800">All Customer_categories</h2>
+        <h2 class="text-2xl font-bold text-gray-800">All Customer Categories</h2>
         @if(auth()->user()->role->canPerform('create', 'customer_categories'))
-            <a href="{{ route('admin.customer_categories.create') }}" class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700">+ Create</a>
+            <a href="{{ route('admin.customer_categories.create') }}" class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700">+ Add  Customer Category</a>
         @else
             <a href="{{ route('admin.dashboard') }}" class="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700">Back to Dashboard</a>
         @endif

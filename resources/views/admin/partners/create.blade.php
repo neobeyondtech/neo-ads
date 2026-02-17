@@ -10,7 +10,7 @@
     }
 </style>
 <div class="flex justify-between items-center mb-6">
-    <h1 class="text-2xl font-bold">Create Partner</h1>
+    <h1 class="text-2xl font-bold">Add Partner</h1>
 </div>
 
 @if($errors->any())
@@ -181,7 +181,7 @@
 
                 <div class="flex gap-3">
                     <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-lg">
-                        Create Partner
+                        Add Partner
                     </button>
                     <a href="{{ route('admin.partners.index') }}" class="bg-gray-500 hover:bg-gray-600 text-white px-6 py-2 rounded-lg">
                         Cancel

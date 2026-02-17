@@ -7,9 +7,9 @@
 <div class="space-y-6">
     {{-- Header --}} 
     <div class="flex justify-between items-center">
-        <h2 class="text-2xl font-bold text-gray-800">All Customer_types</h2>
+        <h2 class="text-2xl font-bold text-gray-800">All Customer Types</h2>
         @if(auth()->user()->role->canPerform('create', 'customer_types'))
-            <a href="{{ route('admin.customer_types.create') }}" class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700">+ Create</a>
+            <a href="{{ route('admin.customer_types.create') }}" class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700">+ Add Customer Type</a>
         @else
             <a href="{{ route('admin.dashboard') }}" class="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700">Back to Dashboard</a>
         @endif
@@ -50,7 +50,7 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="5" class="px-4 py-8 text-center text-gray-500">No customer_types found</td>
+                        <td colspan="5" class="px-4 py-8 text-center text-gray-500">No customer types found</td>
                     </tr>
                 @endforelse
             </tbody>

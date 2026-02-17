@@ -9,7 +9,7 @@
     <div class="flex justify-between items-center">
         <h2 class="text-2xl font-bold text-gray-800">All Enrollments</h2>
         @if(auth()->user()->role->canPerform('create', 'enrollments'))
-            <a href="{{ route('admin.enrollments.create') }}" class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700">+ Create</a>
+            <a href="{{ route('admin.enrollments.create') }}" class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700">+ Add Enrollment</a>
         @else
             <a href="{{ route('admin.dashboard') }}" class="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700">Back to Dashboard</a>
         @endif
