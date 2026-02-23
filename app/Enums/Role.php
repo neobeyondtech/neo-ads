@@ -24,7 +24,7 @@ enum Role: int
          return match($this) {
             Role::SUPER_ADMIN => ['my-dashboard', 'user-management', 'reports', 'settings'],
             Role::ADMIN => [],
-            Role::CUSTOMER => ['my-dashboard', 'my-ads', 'my-payment', 'my-profile', 'my-orders'],
+            Role::CUSTOMER => ['my-dashboard', 'my-ads', 'my-payment', 'my-profile', 'my-orders','my-monitoring'],
             Role::PARTNER => [],
         };
     }
@@ -66,7 +66,8 @@ enum Role: int
                 'my-ads' => ['create', 'view_own', 'edit_own'],
                 'my-payment' => ['view_own'], 
                 'my-profile' => ['view_own', 'edit_own'], 
-                'my-orders' => ['view_own', 'create'],
+                'my-orders' => ['view_own', 'create'],                
+                'my-monitoring' => ['create', 'view_own', 'edit_own', 'delete_own'],
                 'advertisement' => ['create', 'view_own', 'edit_own', 'delete_own']
             ],
             Role::PARTNER => [

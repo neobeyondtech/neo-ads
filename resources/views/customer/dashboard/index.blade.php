@@ -63,5 +63,146 @@
             </table>
         </div>
     </div>
+    
+</div>
+
+<br>
+<!-- Campaign Dashboard -->
+<div class="space-y-8">
+
+    <!-- Campaign Title -->
+    <div class="bg-white rounded-lg border border-gray-200 p-6 flex justify-between items-center">
+        <h2 class="text-xl font-semibold text-gray-900">Promo ACE Februari</h2>
+        <div class="flex gap-3">
+            <button class="px-4 py-2 text-sm bg-gray-100 rounded-lg">Tanggal</button>
+            <button class="px-4 py-2 text-sm bg-blue-600 text-white rounded-lg">Unduh Laporan</button>
+        </div>
+    </div>
+
+    <!-- METRIK -->
+    <div>
+        <h3 class="text-lg font-semibold text-gray-900 mb-4">Metrik Jangkauan</h3>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+            <!-- Left metrics -->
+            <div class="space-y-4">
+
+                <div class="bg-white border rounded-lg p-5">
+                    <div class="text-gray-500 text-sm">Total Jarak Tempuh</div>
+                    <div class="text-xs text-gray-400 mb-2">
+                        Akumulasi kilometer kendaraan selama kampanye
+                    </div>
+                    <div class="text-2xl font-bold text-blue-900">13.059</div>
+                </div>
+
+                <div class="bg-white border rounded-lg p-5">
+                    <div class="text-gray-500 text-sm">Estimasi Impresi</div>
+                    <div class="text-xs text-gray-400 mb-2">
+                        Berdasarkan kepadatan lalu lintas
+                    </div>
+                    <div class="text-2xl font-bold text-blue-900">543.790</div>
+                </div>
+
+                <div class="bg-white border rounded-lg p-5">
+                    <div class="text-gray-500 text-sm">Mitra Aktif</div>
+                    <div class="text-xs text-gray-400 mb-2">
+                        Kendaraan yang sedang aktif
+                    </div>
+                    <div class="text-2xl font-bold text-blue-900">13</div>
+                </div>
+
+            </div>
+
+            <!-- Heatmap -->
+            <div class="md:col-span-2 bg-white border rounded-lg flex items-center justify-center h-[260px]">
+                <span class="text-gray-400 font-medium">
+                    [Heatmap / Peta Sebaran]
+                </span>
+            </div>
+
+        </div>
+    </div>
+
+
+    <!-- PROGRESS -->
+    <div>
+        <h3 class="text-lg font-semibold text-gray-900 mb-4">Progress Kampanye Iklan</h3>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+            <!-- Progress -->
+            <div class="bg-white border rounded-lg p-6 flex flex-col items-center justify-center">
+                <div class="text-gray-500 text-sm mb-2">Progress Kampanye</div>
+
+                <div class="relative w-32 h-32 flex items-center justify-center">
+                    <div class="absolute text-xl font-bold">87%</div>
+                    <div class="w-32 h-32 rounded-full border-8 border-blue-500 border-t-gray-200"></div>
+                </div>
+
+                <div class="text-xs text-gray-400 mt-2">
+                    Target tercapai
+                </div>
+            </div>
+
+
+            <!-- Top routes -->
+            <div class="bg-white border rounded-lg p-6">
+                <div class="text-gray-500 text-sm mb-4">Rute Teratas</div>
+
+                <div class="space-y-3 text-sm">
+
+                    <div>
+                        <div class="flex justify-between mb-1">
+                            <span>Jakarta</span>
+                            <span>32%</span>
+                        </div>
+                        <div class="h-2 bg-gray-200 rounded">
+                            <div class="h-2 bg-blue-600 rounded w-[32%]"></div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="flex justify-between mb-1">
+                            <span>Bandung</span>
+                            <span>12%</span>
+                        </div>
+                        <div class="h-2 bg-gray-200 rounded">
+                            <div class="h-2 bg-blue-600 rounded w-[12%]"></div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="flex justify-between mb-1">
+                            <span>Surabaya</span>
+                            <span>10%</span>
+                        </div>
+                        <div class="h-2 bg-gray-200 rounded">
+                            <div class="h-2 bg-blue-600 rounded w-[10%]"></div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="flex justify-between mb-1">
+                            <span>Medan</span>
+                            <span>7%</span>
+                        </div>
+                        <div class="h-2 bg-gray-200 rounded">
+                            <div class="h-2 bg-blue-600 rounded w-[7%]"></div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+
+            <!-- Placeholder -->
+            <div class="bg-white border rounded-lg p-6 flex items-center justify-center">
+                <span class="text-gray-400">XXX</span>
+            </div>
+
+        </div>
+    </div>
+
 </div>
 @endsection

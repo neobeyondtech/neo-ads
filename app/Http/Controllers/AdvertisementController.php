@@ -93,7 +93,7 @@ class AdvertisementController extends Controller
             $minEnddate = $request->startdate 
             ? Carbon::parse($request->startdate)->addDays(30)->format('Y-m-d')
             : null;
-
+            //dd($request);
             $validated = $request->validate([
                 'title' => 'required|string|max:255',
                 'goal_type' => 'required|string|in:' . implode(',', GoalType::values()),

@@ -8,6 +8,7 @@ use App\Http\Controllers\AdvertisementController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\CustomerProfileController;
 use App\Http\Controllers\AccountController;
+use App\Http\Controllers\MonitoringController;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Http\Request;
 use App\Models\User;
@@ -59,6 +60,15 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/detail/{advertisement}', [AdvertisementController::class, 'show'])->name('show');
         Route::post('/calculate-price', [AdvertisementController::class, 'calculatePrice'])->name('calculate-price');
         Route::get('/cancel/{advertisement}', [AdvertisementController::class, 'cancelOrder'])->name('cancel');
+    });
+
+    Route::prefix('my-monitoring')
+        ->name('my-monitoring.')
+        ->group(function () {
+        Route::get('/', [MonitoringController::class, 'index'])->name('index');
+        Route::get('/create', [MonitoringController::class, 'create'])->name('create');
+        Route::post('/store', [MonitoringController::class, 'store'])->name('store');
+        Route::get('/detail/{advertisement}', [MonitoringController::class, 'show'])->name('show');
     });
     
     // Customer Profile Routes

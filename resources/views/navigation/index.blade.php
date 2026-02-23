@@ -28,8 +28,8 @@
 
     @if (auth()->user()->role->menus() && in_array('my-orders', auth()->user()->role->menus()))
             {{-- Monitoring --}}
-            <a href="{{ route('my-orders.index') }}"
-               class="sidebar-link {{ request()->routeIs('my-orders.*') ? 'active' : '' }}">
+            <a href="{{ route('my-monitoring.index') }}"
+               class="sidebar-link {{ request()->routeIs('my-monitoring.*') ? 'active' : '' }}">
                 <svg class="icon" fill="none" viewBox="0 0 24 24">
                     <path stroke-width="2" d="M4 19h16M4 15l4-4 4 4 4-6 4 6"/>
                 </svg>
