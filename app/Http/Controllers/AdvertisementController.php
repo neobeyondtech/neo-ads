@@ -87,13 +87,12 @@ class AdvertisementController extends Controller
         if ($authResponse) {
             return redirect()->back()->withErrors(['permission' => $authResponse->getData()->message]);
         }
-
+ 
         try{
             $minStartdate = Carbon::now()->addWeeks(2)->format('Y-m-d');
             $minEnddate = $request->startdate 
             ? Carbon::parse($request->startdate)->addDays(30)->format('Y-m-d')
             : null;
-            //dd($request);
             $validated = $request->validate([
                 'title' => 'required|string|max:255',
                 'goal_type' => 'required|string|in:' . implode(',', GoalType::values()),
@@ -106,7 +105,9 @@ class AdvertisementController extends Controller
                 'total_budget' => 'nullable|numeric|min:0',
                 'description' => 'nullable|string|max:1000',
             ]);
-
+            
+            
+           // dd(Auth::user());
             $user = Auth::user();
             
             // Calculate duration if enddate is provided
@@ -133,8 +134,11 @@ class AdvertisementController extends Controller
                 'status' => 'draft',
                 'draft_at' => Carbon::now(),
             ]);
-            ActivityLog::log($user->id, 'Membuat iklan baru dengan ID: ' . $advertisement->id, 'advertisement_create', $advertisement->toArray());
-            return redirect()->route('my-ads.index')->with('success', 'Iklan berhasil dibuat!');
+            ActivityLog::log($user->id, 'Membuat iklan baru dengan ID: ' . $advertisement->id, 'advertisement_create', 'advertisement');
+            return redirect()->back()->with([
+                'success' => 'Iklan berhasil dibuat!',
+                'success_title' => $advertisement->title 
+            ]);
         }catch (\Exception $e) {
             return redirect()->back()->with('error', 'Terjadi kesalahan saat membuat iklan: ' . $e->getMessage())->withInput();
         }

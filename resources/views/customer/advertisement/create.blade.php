@@ -150,7 +150,7 @@
         <div>
             <label class="label">Target Eksposur Tercapai (KM)*</label>
             <input type="number" class="input @error('target_distance') border-red-500 @enderror" 
-                   name="target_distance" value="{{ old('target_distance') }}" step="0.01" min="10">
+                   name="target_distance" value="{{ old('target_distance') }}" step="0.01" min="100">
             @error('target_distance')
                 <span class="text-red-500 text-sm">{{ $message }}</span>
             @enderror
@@ -217,6 +217,71 @@
         </div>
     </form>
     </div>
+    @if(session('success'))
+<div id="successModal"
+     class="fixed inset-0 flex items-center justify-center z-50">
+
+    {{-- Overlay Abu Soft --}}
+    <div class="absolute inset-0 bg-gray-500/30 backdrop-blur-sm"></div>
+
+    {{-- Card --}}
+    <div class="relative bg-white w-full max-w-lg rounded-2xl shadow-2xl p-10 text-center">
+
+        {{-- Badge Icon --}}
+        <div class="flex justify-center mb-6">
+            <div class="relative w-24 h-24">
+                
+                {{-- Starburst Shape --}}
+                <div class="absolute inset-0 bg-[#7a8ea9]"
+                     style="clip-path: polygon(
+                        50% 0%, 61% 10%, 75% 7%, 82% 20%,
+                        95% 25%, 90% 40%, 100% 50%, 90% 60%,
+                        95% 75%, 82% 80%, 75% 93%, 61% 90%,
+                        50% 100%, 39% 90%, 25% 93%, 18% 80%,
+                        5% 75%, 10% 60%, 0% 50%, 10% 40%,
+                        5% 25%, 18% 20%, 25% 7%, 39% 10%
+                     );">
+                </div>
+
+                {{-- Check Icon --}}
+                <div class="absolute inset-0 flex items-center justify-center">
+                    <svg class="w-10 h-10 text-white" fill="none"
+                         stroke="currentColor" stroke-width="3"
+                         viewBox="0 0 24 24">
+                        <path stroke-linecap="round"
+                              stroke-linejoin="round"
+                              d="M5 13l4 4L19 7"/>
+                    </svg>
+                </div>
+
+            </div>
+        </div>
+
+        {{-- Title --}}
+        <h2 class="text-lg font-bold text-gray-900 mb-3">
+            Kampanye {{ session('success_title') }} Anda telah tersimpan
+        </h2>
+
+        {{-- Description --}}
+        <p class="text-sm text-gray-500 leading-relaxed mb-8">
+            Tim kami akan melakukan verifikasi dan menghubungi Anda dalam
+            waktu maksimal 2×24 jam untuk langkah selanjutnya.
+        </p>
+
+        {{-- Button --}}
+        <button onclick="closeSuccessModal()"
+        class="px-8 py-2 rounded-full border-2 border-gray-900 text-gray-900 font-bold hover:bg-gray-100 transition">
+            Kembali
+        </button>
+    </div>
+</div>
+
+<script>
+function closeSuccessModal() {
+    document.getElementById('successModal').remove();
+}
+</script>
+@endif
 </div>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
